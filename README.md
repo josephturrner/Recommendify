@@ -1,6 +1,8 @@
 # WebDev2023
 
 # Plans...
+Use a preexisting recommendation algorithm
+
 ## Features
   -	Input 3 bands you like it will recommend a new band
   -	Input 3 songs you like it will recommend a new song
