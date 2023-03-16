@@ -1,0 +1,42 @@
+:root {
+    --spotify-green: #1DB954;
+    --spotify-black: #191414;
+    --spotify-dark-green: #186d36;
+    --border: rgb(200, 200, 200);
+}
+
+body {
+    text-align: center !important;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif !important;
+    background-color: whitesmoke !important;
+    color: var(--spotify-black) !important;
+}
+div.container {
+    width: 100% !important;
+    padding: 10px !important;
+}
+header {
+    width: 100%;
+    margin: 0 !important;
+    background-color: whitesmoke !important;
+    color: var(--spotify-black) !important;
+    padding: 25px 0px 10px !important;
+    border-bottom: 1px solid var(--border) !important;
+}
+h1 {
+    font-size: 2.75rem;
+    padding: 0.5em 0 0.5em !important;
+}
+button {
+    font-size: 1.5rem !important;
+    color: var(--spotify-black) !important;
+    background-color: var(--spotify-green) !important;
+    border: 0px !important; 
+    border-radius: 1em !important;
+    box-shadow: 0 0.25em 0.25em var(--spotify-dark-green) !important;
+    padding: 0.5em 3em !important;
+}
+button:active {
+    background-color: var(--spotify-dark-green) !important;
+    transform: translateY(0.125em) !important;
+}
