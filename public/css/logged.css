@@ -23,7 +23,8 @@ header {
     border-bottom: 1px solid var(--border) !important;
 }
 h1 {
-    font-size: 2.75rem !important;
+    text-decoration: underline;
+    font-size: 2.75rem;
     padding: 0.5em 0 0.5em !important;
 }
 table {
