@@ -11,10 +11,14 @@ from scipy.spatial.distance import cdist
 from collections import defaultdict
 import difflib
 
-data = pd.read_csv('recomendation\data.csv')
-genre_data = pd.read_csv('recomendation\data_by_genres.csv')
-year_data = pd.read_csv('recomendation\data_by_year.csv')
-artist_data = pd.read_csv('recomendation\data_by_artist.csv')
+data = pd.read_csv('recommendation\data.csv')
+genre_data = pd.read_csv('recommendation\data_by_genres.csv')
+year_data = pd.read_csv('recommendation\data_by_year.csv')
+artist_data = pd.read_csv('recommendation\data_by_artist.csv')
+
+data['decade'] = data['year'].apply(lambda year : f'{(year//10)*10}s' )
+
+
 
 #Genre clustering
 cluster_pipeline = Pipeline([('scaler', StandardScaler()), ('kmeans', KMeans(n_clusters=12))])
@@ -28,8 +32,8 @@ song_cluster_pipeline = Pipeline([('scaler', StandardScaler()),
                                    verbose=False))
                                  ], verbose=False)
 Y = data.select_dtypes(np.number)
-song_cluster_pipeline.fit(X)
-song_cluster_labels = song_cluster_pipeline.predict(X)
+song_cluster_pipeline.fit(Y)
+song_cluster_labels = song_cluster_pipeline.predict(Y)
 data['cluster_label'] = song_cluster_labels
 
 #Import full spotify song database
@@ -120,5 +124,7 @@ def recommend_songs( song_list, spotify_data, n_songs=10):
     rec_songs = spotify_data.iloc[index]
     rec_songs = rec_songs[~rec_songs['name'].isin(song_dict['name'])]
     return rec_songs[metadata_cols].to_dict(orient='records')
+
+recommend_songs([{'name': 'Fix You', 'year':2005}],  data)
 
 #TODO: Implement into website
