@@ -107,7 +107,7 @@ def flatten_dict_list(dict_list):
     return flattened_dict
 
 # Get song input on website
-def recommend_songs( song_list, spotify_data, n_songs=10):
+def recommend_songs( song_list, spotify_data, n_songs=5):
     
     metadata_cols = ['name', 'year', 'artists']
     song_dict = flatten_dict_list(song_list)
@@ -123,8 +123,11 @@ def recommend_songs( song_list, spotify_data, n_songs=10):
     
     rec_songs = spotify_data.iloc[index]
     rec_songs = rec_songs[~rec_songs['name'].isin(song_dict['name'])]
+    
     return rec_songs[metadata_cols].to_dict(orient='records')
 
-recommend_songs([{'name': 'Fix You', 'year':2005}],  data)
 
+rec_songs = recommend_songs([{'name': 'Blinding Lights', 'year': 2019}],  data)
+for i,d in enumerate(rec_songs):
+    print(f"{d['name']} by {d['artists']}")
 #TODO: Implement into website
