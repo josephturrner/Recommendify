@@ -101,7 +101,7 @@ def recommend_songs( song_list, spotify_data, n_songs=5):
     
     return rec_songs[metadata_cols].to_dict(orient='records')
 
-# input_data = json.loads(sys.argv[1])
+# input_data = json.loads(sys.argv[4])
 # rec_song = recommend_songs(input_data,  data)
 
 # for i,d in enumerate(rec_song):

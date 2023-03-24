@@ -18,17 +18,17 @@ app.get('/callback', (req, res) => {
     res.render(__dirname + '/views/main.ejs');
 })
 
-app.post('/callback', async (req, res) => {
+app.post('/callback', async (req, res) => { 
 
     const data = req.body; 
 
-    const result = await runPythonScript(data); 
+    const result = await runPythonScript(data);
 
-    res.send(result);
-
-    res.render(__dirname + '/views/main.ejs');
+    res.send(result); 
 
 });
+
+     
 
 app.listen(port, () => console.info(`http://localhost:${port}`));
 
@@ -54,4 +54,4 @@ async function runPythonScript(data) {
 
     }); 
 
-}
+} 
