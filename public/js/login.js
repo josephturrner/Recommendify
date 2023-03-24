@@ -65,39 +65,21 @@ function getCode() {
 
 function fetchAccessToken(code) {
     let body = "grant_type=authorization_code";
-    // let body = "grant_type=client_credentials";
     body += "&code=" + code;
     body += "&redirect_uri=" + encodeURI(redirect_uri);
     body += "&client_id=" + clientID;
     body += "&client_secret=" + clientSecret;
-
-    // const head = {
-    //     headers: {
-    //         'Content-Type':'application/x-www-form-urlencoded'
-    //     }
-    // }
-
-    // let bod = {
-    //     grant_type: "client_credentials",
-    //     code: code,
-    //     redirectUri: encodeURI(redirect_uri),
-    //     client_id: clientID,
-    //     client_secret: clientSecret
-    // }
-
-    // let header = querystring.stringify(head)
-    // let body = querystring.stringify(bod)
     callAuthApi(body);
 }
 
-function callAuthApi(body) {
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", TOKEN, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.setRequestHeader('Authorization', 'Basic ' + btoa(clientID + ":" + clientSecret));
-    xhr.send(body);
-    xhr.onload = handleAuthResponse;
-}
+// function callAuthApi(body) {
+//     let xhr = new XMLHttpRequest();
+//     xhr.open("POST", TOKEN, true);
+//     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+//     xhr.setRequestHeader('Authorization', 'Basic ' + btoa(clientID + ":" + clientSecret));
+//     xhr.send(body);
+//     xhr.onload = handleAuthResponse;
+// }
 
 function refreshAccessToken() {
     refresh_token = localStorage.getItem("refresh_token");
@@ -126,17 +108,17 @@ function handleAuthResponse() {
 }
 
 function getSongs() {
-    callAuthApi("GET", TRACKS, null, handleSongResponse);
+    callApi("GET", TRACKS, null, handleSongResponse);
 }
 
-// function callApi (method, url, body, callback) {
-//     let xhr = new XMLHttpRequest();
-//     xhr.open(method, url, true);
-//     xhr.setRequestHeader('Content-Type', 'application/json');
-//     xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("access_token"));
-//     xhr.send(body);
-//     xhr.onload = callback;
-// }
+function callApi (method, url, body, callback) {
+    let xhr = new XMLHttpRequest();
+    xhr.open(method, url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("access_token"));
+    xhr.send(body);
+    xhr.onload = callback;
+}
 
 function handleSongResponse() {
     if (this.status == 200) {
