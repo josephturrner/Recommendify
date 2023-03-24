@@ -7,7 +7,7 @@ const AUTHORIZE = "https://accounts.spotify.com/authorize";
 
 const TOKEN = "https://accounts.spotify.com/api/token";
 const ARTISTS = "https://api.spotify.com/v1/me/top/artists?offset=0&limit=10&time_range=short_term"
-const TRACKS = "https://api.spotify.com/v1/me/top/tracks?offset=0&limit=10&time_range=short_term"
+const TRACKS = "https://api.spotify.com/v1/me/top/tracks?offset=0&limit=5&time_range=short_term"
 
 const trackList = document.getElementById('track-list');
 
