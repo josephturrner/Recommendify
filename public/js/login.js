@@ -10,8 +10,22 @@ const AUTHORIZE = "https://accounts.spotify.com/authorize";
 const TOKEN = "https://accounts.spotify.com/api/token";
 const ARTISTS = "https://api.spotify.com/v1/me/top/artists?offset=0&limit=10&time_range=short_term"
 const TRACKS = "https://api.spotify.com/v1/me/top/tracks?offset=0&limit=5&time_range=short_term"
+// const TRACKS = "https://api.spotify.com/v1/me/top/tracks"
 
 const trackList = document.getElementById('favorite-list');
+const start = document.getElementById('startsong');
+const number = document.getElementById('nosong');
+const time = document.getElementById('timerange');
+
+
+function buildRequest() {
+    let url = TRACKS;
+    url += '?';
+    url += `offset=${start.value}`
+    url += `&limit=${number.value}`
+    url += `&time_range=${time.value}`
+    return url;
+}
 
 function authorize() {
     let url = AUTHORIZE;
@@ -114,14 +128,14 @@ function getSongs() {
     callAuthApi("GET", TRACKS, null, handleSongResponse);
 }
 
-function callApi (method, url, body, callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open(method, url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("access_token"));
-    xhr.send(body);
-    xhr.onload = callback;
-}
+// function callApi (method, url, body, callback) {
+//     let xhr = new XMLHttpRequest();
+//     xhr.open(method, url, true);
+//     xhr.setRequestHeader('Content-Type', 'application/json');
+//     xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("access_token"));
+//     xhr.send(body);
+//     xhr.onload = callback;
+// }
 
 function handleSongResponse() {
     if (this.status == 200) {

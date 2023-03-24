@@ -9,8 +9,8 @@
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <script src="js/login.js"></script>
 </head>
-<!-- <body onload="onPageLoad()"> -->
 <body>
+<!-- <body> -->
     <div>
         <header>
             <h1><img src="images/8th.png" alt=""/>Recommendify<img src="images/double8th.png" alt=""/></h1>
@@ -18,20 +18,20 @@
     
         <section class="container">
             <h2>Search Options</h2>
-            <form action="localhost:8888/callback" method="post">
+            <form action='localhost:8888/callback' method='post' id="form">
                 <fieldset>
                     <div class="input-container">
                         <label>Starting at song #:</label>
-                        <input type="number" max="50" min="0" name="offset" placeholder=""/>
+                        <input id="startsong" type="number" max="50" min="0" name="offset" placeholder=""/>
                     </div>
                     <div class="input-container">
                         <label>No. of songs</label>
-                        <input type="number" max="50" min="1" name="limit" placeholder=""/>
+                        <input id="nosong" type="number" max="50" min="1" name="limit" placeholder=""/>
                     </div>
                     <div class="input-container">
                         <label>Time Range</label>
                         <div class="select-wrapper">
-                            <select name="time_range">
+                            <select id="timerange" name="time_range">
                                 <option hidden value="invalid">Select Timeframe</option>
                                 <option value="long_term">Long Term (Years)</option>
                                 <option value="medium_term">Medium Term (6 months)</option>
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                 </fieldset>
-                <input type="submit"/>
+                <button onclick="onPageLoad()">Submit</button>
             </form>
         </section>
 
