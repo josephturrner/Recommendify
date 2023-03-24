@@ -9,8 +9,7 @@ const AUTHORIZE = "https://accounts.spotify.com/authorize";
 
 const TOKEN = "https://accounts.spotify.com/api/token";
 const ARTISTS = "https://api.spotify.com/v1/me/top/artists?offset=0&limit=10&time_range=short_term"
-const TRACKS = "https://api.spotify.com/v1/me/top/tracks?offset=0&limit=5&time_range=short_term"
-// const TRACKS = "https://api.spotify.com/v1/me/top/tracks"
+const TRACKS = "https://api.spotify.com/v1/me/top/tracks"
 
 const rankingList = document.getElementById('ranking-list');
 const trackList = document.getElementById('favorite-list');
@@ -72,14 +71,14 @@ function fetchAccessToken(code) {
     callAuthApi(body);
 }
 
-// function callAuthApi(body) {
-//     let xhr = new XMLHttpRequest();
-//     xhr.open("POST", TOKEN, true);
-//     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-//     xhr.setRequestHeader('Authorization', 'Basic ' + btoa(clientID + ":" + clientSecret));
-//     xhr.send(body);
-//     xhr.onload = handleAuthResponse;
-// }
+function callAuthApi(body) {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", TOKEN, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.setRequestHeader('Authorization', 'Basic ' + btoa(clientID + ":" + clientSecret));
+    xhr.send(body);
+    xhr.onload = handleAuthResponse;
+}
 
 function refreshAccessToken() {
     refresh_token = localStorage.getItem("refresh_token");
@@ -108,7 +107,7 @@ function handleAuthResponse() {
 }
 
 function getSongs() {
-    callApi("GET", TRACKS, null, handleSongResponse);
+    callApi("GET", buildRequest(), null, handleSongResponse);
 }
 
 function callApi (method, url, body, callback) {

@@ -8,6 +8,7 @@ app.use('/css', express.static(__dirname + '/public/css'));
 app.use('/js', express.static(__dirname + '/public/js'));
 app.use('/images', express.static(__dirname + '/public/images'));
 app.use('/callback', express.static(__dirname + '/public'));
+app.use('/recommendation', express.static(__dirname + '/recommendation'))
 app.use(express.json());
 
 app.get('', (req, res) => {
@@ -36,7 +37,7 @@ async function runPythonScript(data) {
 
     const { spawn } = require('child_process'); 
 
-    const pythonProcess = spawn('C:\\Users\\powellt1\\AppData\\Local\\Programs\\Python\\Python311\\python.exe', ['recommendation/model.py', JSON.stringify(data)]); /* Has to be python installation path */
+    const pythonProcess = spawn('recommendation/python.exe', ['recommendation/model.py', JSON.stringify(data)]); /* Has to be python installation path */
 
     return new Promise((resolve, reject) => { 
 
