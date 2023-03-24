@@ -108,7 +108,7 @@ select {
     outline: none !important;
 }
 
-input[type="submit"] {
+button {
     width: 40% !important;
     min-width: fit-content !important;
     letter-spacing: 0.06125rem !important;
@@ -122,13 +122,13 @@ input[type="submit"] {
     margin: 1em auto 0 !important;
     padding: 0.5em 3em !important;
 }
-input[type="submit"]:hover {
+button:hover {
     background-color: var(--spotify-light-green) !important;
 }
-input[type="submit"]:active {
+button:active {
     background-color: var(--spotify-dark-green) !important;
 }
-input[type="submit"]:focus {
+button:focus {
     box-shadow: none !important;
 }
 label {
