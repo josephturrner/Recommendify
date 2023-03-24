@@ -12,6 +12,7 @@ const ARTISTS = "https://api.spotify.com/v1/me/top/artists?offset=0&limit=10&tim
 const TRACKS = "https://api.spotify.com/v1/me/top/tracks?offset=0&limit=5&time_range=short_term"
 // const TRACKS = "https://api.spotify.com/v1/me/top/tracks"
 
+const rankingList = document.getElementById('ranking-list');
 const trackList = document.getElementById('favorite-list');
 const start = document.getElementById('startsong');
 const number = document.getElementById('nosong');
@@ -151,10 +152,14 @@ function handleSongResponse() {
 }
 
 function songList(data) {
+    rankingList.innerHTML = '';
     trackList.innerHTML = '';
     for (i = 0; i < data.items.length; i++) {
-        const li = document.createElement('li');
-        li.innerHTML = data.items[i].name;
-        trackList.appendChild(li);
+        const song = document.createElement('li');
+        const rank = document.createElement('li');
+        song.innerHTML = data.items[i].name;
+        rank.innerHTML = i+1;
+        trackList.appendChild(song);
+        rankingList.appendChild(rank);
     }
 }
