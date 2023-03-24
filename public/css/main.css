@@ -127,9 +127,11 @@ button:hover {
 }
 button:active {
     background-color: var(--spotify-dark-green) !important;
+    outline: none !important;
 }
 button:focus {
-    box-shadow: none !important;
+    background-color: var(--spotify-green) !important;
+    outline: none !important;
 }
 label {
     display: block !important;
