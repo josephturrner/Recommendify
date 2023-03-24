@@ -1,7 +1,9 @@
+// import querystring from 'query-string';
+
 var redirect_uri = 'http://localhost:8888/callback/';
 
-var client_id = 'de1edab117b649a58d1e84d1ef7ce560'; // Your client id
-var client_secret = '6232df2c5d28412b93837c891ac88214'; // Your secret
+var clientID = 'de1edab117b649a58d1e84d1ef7ce560'; // Your client id
+var clientSecret = '6232df2c5d28412b93837c891ac88214'; // Your secret
 
 const AUTHORIZE = "https://accounts.spotify.com/authorize";
 
@@ -9,11 +11,11 @@ const TOKEN = "https://accounts.spotify.com/api/token";
 const ARTISTS = "https://api.spotify.com/v1/me/top/artists?offset=0&limit=10&time_range=short_term"
 const TRACKS = "https://api.spotify.com/v1/me/top/tracks?offset=0&limit=10&time_range=short_term"
 
-const trackList = document.getElementById('track-list');
+const trackList = document.getElementById('favorite-list');
 
 function authorize() {
     let url = AUTHORIZE;
-    url += "?client_id=" + client_id;
+    url += "?client_id=" + clientID;
     url += "&response_type=code";
     url += "&redirect_uri=" + encodeURI(redirect_uri);
     url += "&show_dialog=true";
@@ -48,10 +50,28 @@ function getCode() {
 
 function fetchAccessToken(code) {
     let body = "grant_type=authorization_code";
+    // let body = "grant_type=client_credentials";
     body += "&code=" + code;
     body += "&redirect_uri=" + encodeURI(redirect_uri);
-    body += "&client_id=" + client_id;
-    body += "&client_secret=" + client_secret;
+    body += "&client_id=" + clientID;
+    body += "&client_secret=" + clientSecret;
+
+    // const head = {
+    //     headers: {
+    //         'Content-Type':'application/x-www-form-urlencoded'
+    //     }
+    // }
+
+    // let bod = {
+    //     grant_type: "client_credentials",
+    //     code: code,
+    //     redirectUri: encodeURI(redirect_uri),
+    //     client_id: clientID,
+    //     client_secret: clientSecret
+    // }
+
+    // let header = querystring.stringify(head)
+    // let body = querystring.stringify(bod)
     callAuthApi(body);
 }
 
@@ -59,7 +79,7 @@ function callAuthApi(body) {
     let xhr = new XMLHttpRequest();
     xhr.open("POST", TOKEN, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.setRequestHeader('Authorization', 'Basic ' + btoa(client_id + ":" + client_secret));
+    xhr.setRequestHeader('Authorization', 'Basic ' + btoa(clientID + ":" + clientSecret));
     xhr.send(body);
     xhr.onload = handleAuthResponse;
 }
@@ -68,7 +88,7 @@ function refreshAccessToken() {
     refresh_token = localStorage.getItem("refresh_token");
     let body = "grant_type=refresh_token";
     body += "&refresh_token=" + refresh_token;
-    body += "&client_id=" + client_id;
+    body += "&client_id=" + clientID;
     callAuthApi(body);
 }
 

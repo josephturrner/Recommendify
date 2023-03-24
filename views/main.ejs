@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendify</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src="js/login.js"></script>
+</head>
+<!-- <body onload="onPageLoad()"> -->
+<body>
+    <div>
+        <header>
+            <h1><img src="images/8th.png" alt=""/>Recommendify<img src="images/double8th.png" alt=""/></h1>
+        </header>
+    
+        <section class="container">
+            <h2>Search Options</h2>
+            <form action="/" method="post">
+                <fieldset>
+                    <div class="input-container">
+                        <label>Starting at song #:</label>
+                        <input type="number" max="50" min="0" name="offset" placeholder=""/>
+                    </div>
+                    <div class="input-container">
+                        <label>No. of songs</label>
+                        <input type="number" max="50" min="1" name="limit" placeholder=""/>
+                    </div>
+                    <div class="input-container">
+                        <label>Time Range</label>
+                        <div class="select-wrapper">
+                            <select name="time_range">
+                                <option hidden value="invalid">Select Timeframe</option>
+                                <option value="long_term">Long Term (Years)</option>
+                                <option value="medium_term">Medium Term (6 months)</option>
+                                <option value="short_term">Short Term (1 month)</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+                <input type="submit"/>
+            </form>
+        </section>
+
+        <table cols="3">
+            <thead>
+                <tr>
+                    <th>Ranking</th>
+                    <th>Top Songs</th>
+                    <th>Recommended Songs</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <ol class="ranking">
+                            <li>1</li>
+                            <li>2</li>
+                            <li>3</li>
+                            <li>4</li>
+                            <li>5</li>
+                            <li>6</li>
+                            <li>7</li>
+                            <li>8</li>
+                            <li>9</li>
+                            <li>10</li>
+                        </ol>
+                    </td>
+                    <td>
+                        <ol class="favorite" id="favorite-list">
+                            <li>American Idiot</li>
+                            <li>A$AP forever</li>
+                            <li>Everlong</li>
+                            <li>Seek and Destroy</li>
+                            <li>That's It</li>
+                            <li>Drives Me Crazy!</li>
+                            <li>Mad Man</li>
+                            <li>Floor seats</li>
+                            <li>Lifestyle</li>
+                            <li>L$D</li>
+                        </ol>
+                    </td>
+                    <td>
+                        <ol class="recommended">
+                            <li>Welcome to Paradise</li>
+                            <li>Excuse Me</li>
+                            <li>Cant Say</li>
+                            <li>Ride the Lightning</li>
+                            <li>Yeah Right</li>
+                            <li>Butterfly Effect</li>
+                            <li>I Was Made for Lovin You</li>
+                            <li>Hotel Lobby</li>
+                            <li>Redbone</li>
+                            <li>Kickstart My Heart</li>
+                        </ol>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
