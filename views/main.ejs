@@ -21,7 +21,7 @@
                 <fieldset>
                     <div class="input-container">
                         <label>Starting at song #:</label>
-                        <input id="startsong" type="number" max="50" min="0" name="offset" placeholder=""/>
+                        <input id="start" type="number" max="50" min="0" name="offset" placeholder=""/>
                     </div>
                     <div class="input-container">
                         <label>No. of songs</label>
@@ -48,6 +48,7 @@
                 <tr>
                     <th>Ranking</th>
                     <th>Top Songs</th>
+                    <th>Top Artists</th>
                     <th>Recommended Songs</th>
                 </tr>
             </thead>
@@ -68,17 +69,11 @@
                         </ol>
                     </td>
                     <td>
-                        <ol class="favorite" id="favorite-list">
-                            <li>American Idiot</li>
-                            <li>A$AP forever</li>
-                            <li>Everlong</li>
-                            <li>Seek and Destroy</li>
-                            <li>That's It</li>
-                            <li>Drives Me Crazy!</li>
-                            <li>Mad Man</li>
-                            <li>Floor seats</li>
-                            <li>Lifestyle</li>
-                            <li>L$D</li>
+                        <ol class="favorite" id="favorite-song-list">
+                        </ol>
+                    </td>
+                    <td>
+                        <ol class="favorite" id="favorite-artist-list">
                         </ol>
                     </td>
                     <td>

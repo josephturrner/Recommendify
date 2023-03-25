@@ -8,18 +8,20 @@ var clientSecret = '6232df2c5d28412b93837c891ac88214'; // Your secret
 const AUTHORIZE = "https://accounts.spotify.com/authorize";
 
 const TOKEN = "https://accounts.spotify.com/api/token";
-const ARTISTS = "https://api.spotify.com/v1/me/top/artists?offset=0&limit=10&time_range=short_term"
+// const ARTISTS = "https://api.spotify.com/v1/me/top/artists?offset=0&limit=10&time_range=short_term"
+const ARTISTS = "https://api.spotify.com/v1/me/top/artists"
 const TRACKS = "https://api.spotify.com/v1/me/top/tracks"
 
 const rankingList = document.getElementById('ranking-list');
-const trackList = document.getElementById('favorite-list');
-const start = document.getElementById('startsong');
+const favSongList = document.getElementById('favorite-song-list');
+const favArtistList = document.getElementById('favorite-artist-list');
+const start = document.getElementById('start');
 const number = document.getElementById('nosong');
 const time = document.getElementById('timerange');
 
 
-function buildRequest() {
-    let url = TRACKS;
+function buildRequest(baseURL) {
+    let url = baseURL;
     url += '?';
     url += `offset=${start.value}`
     url += `&limit=${number.value}`
@@ -42,6 +44,7 @@ function onPageLoad() {
         handleRedirect();
     }
     else {
+        getArtists();
         getSongs();
     }
 }
@@ -100,6 +103,7 @@ function handleAuthResponse() {
             localStorage.setItem("refresh_token", refresh_token);
         }
         getSongs();
+        getArtists();
     } else {
         console.log(this.responseText);
         alert(this.responseText);
@@ -107,7 +111,12 @@ function handleAuthResponse() {
 }
 
 function getSongs() {
-    callApi("GET", buildRequest(), null, handleSongResponse);
+    callApi("GET", buildRequest(TRACKS), null, handleSongResponse);
+}
+
+function getArtists() {
+    console.log('getArtists');
+    callApi("GET", buildRequest(ARTISTS), null, handleArtistResponse);
 }
 
 function callApi (method, url, body, callback) {
@@ -132,15 +141,53 @@ function handleSongResponse() {
     }
 }
 
+function handleArtistResponse() {
+    if (this.status == 200) {
+        var data = JSON.parse(this.responseText);
+        console.log(data);
+        artistList(data);
+    } else if (this.status == 401) {
+        refreshAccessToken();
+    } else {
+        console.log(this.responseText);
+        alert(this.responseText);
+    }
+}
+
+// function displayData(songs, artists) {
+//     rankingList.innerHTML = '';
+//     favSongList.innerHTML = '';
+//     favArtistist.innerHTML = '';
+//     for (i = 0; i < data.items.length; i++) {
+//         const song = document.createElement('li');
+//         const rank = document.createElement('li');
+//         const artist = document.createElement('li');
+//         song.innerHTML = songs.items[i].name;
+//         artist.innerHTML = artist.items[i].name;
+//         rank.innerHTML = i+1;
+//         favSongList.appendChild(song);
+//         rankingList.appendChild(rank);
+//     }
+// }
+
+function artistList(data) {
+    favArtistList.innerHTML = '';
+    for (i = 0; i < data.items.length; i++) {
+        const artist = document.createElement('li');
+        artist.innerHTML = data.items[i].name;
+        favArtistList.appendChild(artist);
+    }
+}
+
 function songList(data) {
     rankingList.innerHTML = '';
-    trackList.innerHTML = '';
+    favSongList.innerHTML = '';
     for (i = 0; i < data.items.length; i++) {
         const song = document.createElement('li');
         const rank = document.createElement('li');
         song.innerHTML = data.items[i].name;
         rank.innerHTML = i+1;
-        trackList.appendChild(song);
+        favSongList.appendChild(song);
         rankingList.appendChild(rank);
     }
 }
