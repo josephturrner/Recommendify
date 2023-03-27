@@ -17,15 +17,15 @@
     
         <section class="container">
             <h2>Search Options</h2>
-            <form action='localhost:8888/callback' method='post' id="form">
+            <form action='localhost:8888/callback/' method='post' id="form">
                 <fieldset>
                     <div class="input-container">
-                        <label>Starting at song #:</label>
-                        <input id="start" type="number" max="50" min="0" name="offset" placeholder=""/>
+                        <label>No. of items</label>
+                        <input id="nosong" type="number" max="50" min="1" name="limit" placeholder=""/>
                     </div>
                     <div class="input-container">
-                        <label>No. of songs</label>
-                        <input id="nosong" type="number" max="50" min="1" name="limit" placeholder=""/>
+                        <label>Starting at item:</label>
+                        <input id="start" type="number" max="50" min="0" name="offset" placeholder=""/>
                     </div>
                     <div class="input-container">
                         <label>Time Range</label>
@@ -39,41 +39,31 @@
                         </div>
                     </div>
                 </fieldset>
-                <button onclick="onPageLoad()">Submit</button>
+                <button onclick="loadData()">Submit</button>
             </form>
         </section>
 
         <table cols="3">
             <thead>
-                <tr>
-                    <th>Ranking</th>
-                    <th>Top Songs</th>
+                <tr id='tr-header'>
+                    <!-- <th>Ranking</th> -->
                     <th>Top Artists</th>
-                    <th>Recommended Songs</th>
+                    <th>Top Songs</th>
+                    <th>Song Recommendations</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>
+                    <!-- <td>
                         <ol id='ranking-list' class="ranking">
-                            <li>1</li>
-                            <li>2</li>
-                            <li>3</li>
-                            <li>4</li>
-                            <li>5</li>
-                            <li>6</li>
-                            <li>7</li>
-                            <li>8</li>
-                            <li>9</li>
-                            <li>10</li>
+                        </ol>
+                    </td> -->
+                    <td>
+                        <ol class="favorite" id="favorite-artist-list">
                         </ol>
                     </td>
                     <td>
                         <ol class="favorite" id="favorite-song-list">
-                        </ol>
-                    </td>
-                    <td>
-                        <ol class="favorite" id="favorite-artist-list">
                         </ol>
                     </td>
                     <td>

@@ -15,6 +15,7 @@ const TRACKS = "https://api.spotify.com/v1/me/top/tracks"
 const rankingList = document.getElementById('ranking-list');
 const favSongList = document.getElementById('favorite-song-list');
 const favArtistList = document.getElementById('favorite-artist-list');
+const headers = document.getElementById('tr-header');
 const start = document.getElementById('start');
 const number = document.getElementById('nosong');
 const time = document.getElementById('timerange');
@@ -39,13 +40,14 @@ function authorize() {
     window.location.href = url;
 }
 
-function onPageLoad() {
+function loadData() {
     if (window.location.search.length > 0) {
         handleRedirect();
     }
     else {
-        getArtists();
+        // rankList();
         getSongs();
+        getArtists();
     }
 }
 
@@ -102,6 +104,7 @@ function handleAuthResponse() {
             refresh_token = data.refresh_token;
             localStorage.setItem("refresh_token", refresh_token);
         }
+        // rankList();
         getSongs();
         getArtists();
     } else {
@@ -115,7 +118,6 @@ function getSongs() {
 }
 
 function getArtists() {
-    console.log('getArtists');
     callApi("GET", buildRequest(ARTISTS), null, handleArtistResponse);
 }
 
@@ -157,15 +159,27 @@ function handleArtistResponse() {
 // function displayData(songs, artists) {
 //     rankingList.innerHTML = '';
 //     favSongList.innerHTML = '';
-//     favArtistist.innerHTML = '';
-//     for (i = 0; i < data.items.length; i++) {
+//     favArtistList.innerHTML = '';
+//     console.log('songs:', songs);
+//     console.log('artists:', artists);
+//     for (i = 0; i < 10; i++) {
 //         const song = document.createElement('li');
 //         const rank = document.createElement('li');
 //         const artist = document.createElement('li');
 //         song.innerHTML = songs.items[i].name;
-//         artist.innerHTML = artist.items[i].name;
+//         artist.innerHTML = artists.items[i].name;
 //         rank.innerHTML = i+1;
 //         favSongList.appendChild(song);
+//         favArtistList.appendChild(artist);
+//         rankingList.appendChild(rank);
+//     }
+// }
+
+// function rankList() {
+//     rankingList.innerHTML = '';
+//     for (i = 0; i < parseInt(number.value); i++) {
+//         const rank = document.createElement('li');
+//         rank.innerHTML = i+1;
 //         rankingList.appendChild(rank);
 //     }
 // }
@@ -174,20 +188,44 @@ function artistList(data) {
     favArtistList.innerHTML = '';
     for (i = 0; i < data.items.length; i++) {
         const artist = document.createElement('li');
-        artist.innerHTML = data.items[i].name;
+        artist.innerHTML = `<img class='artist-img' src='${data.items[i].images[0].url}' alt=''></img><h3 class='artist-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
         favArtistList.appendChild(artist);
     }
 }
 
 function songList(data) {
-    rankingList.innerHTML = '';
     favSongList.innerHTML = '';
     for (i = 0; i < data.items.length; i++) {
         const song = document.createElement('li');
-        const rank = document.createElement('li');
-        song.innerHTML = data.items[i].name;
-        rank.innerHTML = i+1;
+        song.innerHTML = `<img class='song-img' src='${data.items[i].album.images[0].url}' alt=''></img><h3 class='song-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
         favSongList.appendChild(song);
-        rankingList.appendChild(rank);
     }
+
+    // let recommendations = runPythonScript(data);
+    // Set HTML elements to have the recommendations like songList and artistList
+
 }
+
+async function runPythonScript(data) { 
+
+    const { spawn } = require('child_process'); 
+
+    const pythonProcess = spawn('recommendation/python.exe', ['recommendation/model.py', JSON.stringify(data)]); /* Has to be python installation path */
+
+    return new Promise((resolve, reject) => { 
+
+        pythonProcess.stdout.on('data', (data) => { 
+
+            resolve(JSON.parse(data)); 
+
+        }); 
+
+        pythonProcess.stderr.on('data', (data) => { 
+
+            reject(new Error(`Error running Python script: ${data}`)); 
+
+        }); 
+
+    }); 
+
+} 
