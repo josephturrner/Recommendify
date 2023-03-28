@@ -186,7 +186,8 @@ function songDict(data) {
   year = "";
   for (i = 0; i < data.items.length; i++) {
     title = data.items[i].name;
-    year = Number(data.items[i].album.releasedate.slice(0,4));
+    year = data.items[i].album.releasedate;
+    year = Number(Array.prototype.slice.call(year, 1, 3))
     trackDict = {
       'name': title,
       'year': year,
