@@ -13,6 +13,7 @@ const TRACKS = "https://api.spotify.com/v1/me/top/tracks"
 
 const favSongList = document.getElementById('favorite-song-list');
 const favArtistList = document.getElementById('favorite-artist-list');
+const headers = document.getElementById('tr-header');
 const start = document.getElementById('start');
 const number = document.getElementById('nosong');
 const time = document.getElementById('timerange');
@@ -179,7 +180,8 @@ function songDict(data) {
   year = "";
   for (i = 0; i < data.items.length; i++) {
     title = data.items[i].name;
-    year = Number(data.items[i].album.releasedate.slice(0,4));
+    year = data.items[i].album.releasedate;
+    year = Number(Array.prototype.slice.call(year, 1, 3))
     trackDict = {
       'name': title,
       'year': year,
