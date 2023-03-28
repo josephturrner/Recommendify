@@ -201,10 +201,10 @@ function songDict(data) {
   recommendList(recommendations);
 }
 
-const response = await fetch("http://localhost:8888/callback", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(trackListDict),
-        });
+// const response = await fetch("http://localhost:8888/callback", {
+//     method: "POST",
+//     headers: {
+//     "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(trackListDict),
+// });
