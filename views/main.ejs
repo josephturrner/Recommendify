@@ -21,11 +21,15 @@
                 <fieldset>
                     <div class="input-container">
                         <label>No. of items</label>
-                        <input id="nosong" type="number" max="50" min="1" name="limit" placeholder=""/>
+                        <div class="select-wrapper">
+                            <input id="nosong" type="number" max="50" min="1" name="limit" placeholder=""/>
+                        </div>
                     </div>
                     <div class="input-container">
                         <label>Starting at item:</label>
-                        <input id="start" type="number" max="50" min="0" name="offset" placeholder=""/>
+                        <div class="select-wrapper">
+                            <input id="start" type="number" max="50" min="0" name="offset" placeholder=""/>
+                        </div>
                     </div>
                     <div class="input-container">
                         <label>Time Range</label>
@@ -66,8 +70,8 @@
                         <ol class="favorite" id="favorite-song-list">
                         </ol>
                     </td>
-                    <td>
-                        <ol class="recommended">
+                    <td class="recommended">
+                        <ol>
                             <li>Welcome to Paradise</li>
                             <li>Excuse Me</li>
                             <li>Cant Say</li>
