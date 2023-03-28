@@ -1,5 +1,3 @@
-// import querystring from 'query-string';
-
 var redirect_uri = 'http://localhost:8888/callback/';
 
 var clientID = 'de1edab117b649a58d1e84d1ef7ce560'; // Your client id
@@ -13,7 +11,7 @@ const TRACKS = "https://api.spotify.com/v1/me/top/tracks"
 
 const favSongList = document.getElementById('favorite-song-list');
 const favArtistList = document.getElementById('favorite-artist-list');
-const headers = document.getElementById('tr-header');
+const recList = document.getElementById('recommended-list');
 const start = document.getElementById('start');
 const number = document.getElementById('nosong');
 const time = document.getElementById('timerange');
@@ -104,7 +102,6 @@ function handleAuthResponse() {
         }
         getSongs();
         getArtists();
-        getArtists();
     } else {
         console.log(this.responseText);
         alert(this.responseText);
@@ -145,8 +142,8 @@ function handleSongResponse() {
   if (this.status == 200) {
     var data = JSON.parse(this.responseText);
     console.log(data);
-    songDict(data);
     songList(data);
+    songDict(data);
   } else if (this.status == 401) {
     refreshAccessToken();
   } else {
@@ -173,6 +170,15 @@ function songList(data) {
   }
 }
 
+function recommendList(data) {
+    recList.innerHTML = '';
+    for (i = 0; i < data.items.length; i++) {
+        const rec = document.createElement('li');
+        rec.innerHTML = `<h3 class='song-name'>${data.items[i].name}</h3>`;
+        recList.appendChild(song);
+    }
+}
+
 function songDict(data) {
   trackListDict = "";
   trackDict = {};
@@ -191,7 +197,7 @@ function songDict(data) {
   }
   let recommendations = runPythonScript(trackDict);
 
-  return recommendations;
+  recommendList(recommendations);
 }
 
 async function runPythonScript(data) { 
