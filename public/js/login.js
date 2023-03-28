@@ -186,8 +186,9 @@ function songDict(data) {
   year = "";
   for (i = 0; i < data.items.length; i++) {
     title = data.items[i].name;
-    year = data.items[i].album.releasedate;
-    year = Number(Array.prototype.slice.call(year, 0, 4))
+    year = data.items[i].album.release_date;
+    year = Number(year.slice(0, 4));
+    console.log(year);
     trackDict = {
       'name': title,
       'year': year,
@@ -202,7 +203,7 @@ function songDict(data) {
 
 async function runPythonScript(data) { 
 
-    const { spawn } = require('child_process'); 
+    const { spawn } = require('child_process');
 
     const pythonProcess = spawn('recommendation/python.exe', ['recommendation/model.py', JSON.stringify(data)]); /* Has to be python installation path */
 
