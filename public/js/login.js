@@ -200,26 +200,10 @@ function songDict(data) {
   recommendList(recommendations);
 }
 
-async function runPythonScript(data) { 
-
-    const { spawn } = require('child_process'); 
-
-    const pythonProcess = spawn('recommendation/python.exe', ['recommendation/model.py', JSON.stringify(data)]); /* Has to be python installation path */
-
-    return new Promise((resolve, reject) => { 
-
-        pythonProcess.stdout.on('data', (data) => { 
-
-            resolve(JSON.parse(data)); 
-
-        }); 
-
-        pythonProcess.stderr.on('data', (data) => { 
-
-            reject(new Error(`Error running Python script: ${data}`)); 
-
-        }); 
-
-    }); 
-
-}
+const response = await fetch("http://localhost:8888/callback", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(trackListDict),
+        });

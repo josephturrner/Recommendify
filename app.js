@@ -23,4 +23,38 @@ app.get("/callback", (req, res) => {
   res.render(__dirname + "/views/main.ejs");
 });
 
+app.post('/api/predict', async (req, res) => { 
+
+  const data = req.body; 
+
+  const result = await runPythonScript(data); 
+
+  res.send(result); 
+
+});
+
 app.listen(port, () => console.info(`http://localhost:${port}`));
+
+async function runPythonScript(data) { 
+
+  const { spawn } = require('child_process'); 
+
+  const pythonProcess = spawn('recommendation/python.exe', ['recommendation/model.py', JSON.stringify(data)]); /* Has to be python installation path */
+
+  return new Promise((resolve, reject) => { 
+
+      pythonProcess.stdout.on('data', (data) => { 
+
+          resolve(JSON.parse(data)); 
+
+      }); 
+
+      pythonProcess.stderr.on('data', (data) => { 
+
+          reject(new Error(`Error running Python script: ${data}`)); 
+
+      }); 
+
+  }); 
+
+}
