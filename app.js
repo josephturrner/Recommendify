@@ -23,7 +23,7 @@ app.get("/callback", (req, res) => {
   res.render(__dirname + "/views/main.ejs");
 });
 
-app.post('/api/predict', async (req, res) => { 
+app.post('/callback', async (req, res) => { 
 
   const data = req.body; 
 
