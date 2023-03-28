@@ -24,8 +24,8 @@ header {
     border-bottom: 1px solid var(--border) !important;
 }
 h1 {
-    text-decoration: underline;
-    font-size: 2.75rem;
+    text-decoration: underline !important;
+    font-size: 2.75rem !important;
     padding: 0.5em 0 0.5em !important;
 }
 table {
@@ -36,16 +36,20 @@ table {
     table-layout: auto !important;
 }
 td {
+    margin: 0 !important;
     padding-bottom: 3em !important;
 }
+.recommended {
+    vertical-align: top !important;
+}
 ol {
-    height: max-content !important;
     list-style: none !important;
     padding: 0 !important;
     margin: 0 !important;
 }
 li {
     font-size: 1.25rem !important;
+    height: 10em !important;
 }
 img {
     width: 2em !important;
@@ -56,6 +60,7 @@ thead {
     width: 100% !important;
     margin: 0 auto !important;
     height: max-content !important;
+    border-bottom: 2px solid var(--border) !important;
 }
 th {
     width: fit-content !important;
@@ -150,5 +155,6 @@ li {
     padding-top: 5% !important;
 }
 img.artist-img, img.song-img {
-    width: 100px !important;
+    width: 10em !important;
+    height: 10em !important;
 }
