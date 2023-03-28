@@ -34,12 +34,12 @@ table {
     text-align: center !important;
     width: 90% !important;
     table-layout: auto !important;
-    border-bottom: 1px solid var(--border) !important;
 }
 td {
     padding-bottom: 3em !important;
 }
 ol {
+    height: max-content !important;
     list-style: none !important;
     padding: 0 !important;
     margin: 0 !important;
@@ -93,7 +93,7 @@ select, input {
     line-height: 0 !important;
     display: inline-block !important;
     padding: 0 !important;
-    margin: auto !important;
+    margin: 0 auto !important;
     overflow: hidden !important;
     text-align: center !important;
     font-family: inherit !important;
@@ -127,11 +127,28 @@ button:hover {
 }
 button:active {
     background-color: var(--spotify-dark-green) !important;
+    outline: none !important;
 }
 button:focus {
-    box-shadow: none !important;
+    background-color: var(--spotify-green) !important;
+    outline: none !important;
 }
 label {
     display: block !important;
     margin: 1em auto !important;
+}
+a {
+    color: inherit !important;
+    text-decoration: underline !important;
+}
+a:hover {
+    color: inherit !important;
+    text-decoration: underline !important;
+}
+li {
+    height: 20% !important;
+    padding-top: 5% !important;
+}
+img.artist-img, img.song-img {
+    width: 100px !important;
 }

@@ -8,19 +8,21 @@ var clientSecret = '6232df2c5d28412b93837c891ac88214'; // Your secret
 const AUTHORIZE = "https://accounts.spotify.com/authorize";
 
 const TOKEN = "https://accounts.spotify.com/api/token";
-const ARTISTS = "https://api.spotify.com/v1/me/top/artists?offset=0&limit=10&time_range=short_term"
-const TRACKS = "https://api.spotify.com/v1/me/top/tracks?offset=0&limit=5&time_range=short_term"
-// const TRACKS = "https://api.spotify.com/v1/me/top/tracks"
+// const ARTISTS = "https://api.spotify.com/v1/me/top/artists?offset=0&limit=10&time_range=short_term"
+const ARTISTS = "https://api.spotify.com/v1/me/top/artists"
+const TRACKS = "https://api.spotify.com/v1/me/top/tracks"
 
 const rankingList = document.getElementById('ranking-list');
-const trackList = document.getElementById('favorite-list');
-const start = document.getElementById('startsong');
+const favSongList = document.getElementById('favorite-song-list');
+const favArtistList = document.getElementById('favorite-artist-list');
+const headers = document.getElementById('tr-header');
+const start = document.getElementById('start');
 const number = document.getElementById('nosong');
 const time = document.getElementById('timerange');
 
 
-function buildRequest() {
-    let url = TRACKS;
+function buildRequest(baseURL) {
+    let url = baseURL;
     url += '?';
     url += `offset=${start.value}`
     url += `&limit=${number.value}`
@@ -38,12 +40,14 @@ function authorize() {
     window.location.href = url;
 }
 
-function onPageLoad() {
+function loadData() {
     if (window.location.search.length > 0) {
         handleRedirect();
     }
     else {
+        // rankList();
         getSongs();
+        getArtists();
     }
 }
 
@@ -65,28 +69,10 @@ function getCode() {
 
 function fetchAccessToken(code) {
     let body = "grant_type=authorization_code";
-    // let body = "grant_type=client_credentials";
     body += "&code=" + code;
     body += "&redirect_uri=" + encodeURI(redirect_uri);
     body += "&client_id=" + clientID;
     body += "&client_secret=" + clientSecret;
-
-    // const head = {
-    //     headers: {
-    //         'Content-Type':'application/x-www-form-urlencoded'
-    //     }
-    // }
-
-    // let bod = {
-    //     grant_type: "client_credentials",
-    //     code: code,
-    //     redirectUri: encodeURI(redirect_uri),
-    //     client_id: clientID,
-    //     client_secret: clientSecret
-    // }
-
-    // let header = querystring.stringify(head)
-    // let body = querystring.stringify(bod)
     callAuthApi(body);
 }
 
@@ -118,7 +104,9 @@ function handleAuthResponse() {
             refresh_token = data.refresh_token;
             localStorage.setItem("refresh_token", refresh_token);
         }
+        // rankList();
         getSongs();
+        getArtists();
     } else {
         console.log(this.responseText);
         alert(this.responseText);
@@ -126,23 +114,28 @@ function handleAuthResponse() {
 }
 
 function getSongs() {
-    callAuthApi("GET", TRACKS, null, handleSongResponse);
+    callApi("GET", buildRequest(TRACKS), null, handleSongResponse);
 }
 
-// function callApi (method, url, body, callback) {
-//     let xhr = new XMLHttpRequest();
-//     xhr.open(method, url, true);
-//     xhr.setRequestHeader('Content-Type', 'application/json');
-//     xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("access_token"));
-//     xhr.send(body);
-//     xhr.onload = callback;
-// }
+function getArtists() {
+    callApi("GET", buildRequest(ARTISTS), null, handleArtistResponse);
+}
+
+function callApi (method, url, body, callback) {
+    let xhr = new XMLHttpRequest();
+    xhr.open(method, url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("access_token"));
+    xhr.send(body);
+    xhr.onload = callback;
+}
 
 function handleSongResponse() {
     if (this.status == 200) {
         var data = JSON.parse(this.responseText);
         console.log(data);
         songList(data);
+        songDict(data);
     } else if (this.status == 401) {
         refreshAccessToken();
     } else {
@@ -151,15 +144,75 @@ function handleSongResponse() {
     }
 }
 
-function songList(data) {
-    rankingList.innerHTML = '';
-    trackList.innerHTML = '';
-    for (i = 0; i < data.items.length; i++) {
-        const song = document.createElement('li');
-        const rank = document.createElement('li');
-        song.innerHTML = data.items[i].name;
-        rank.innerHTML = i+1;
-        trackList.appendChild(song);
-        rankingList.appendChild(rank);
+function handleArtistResponse() {
+    if (this.status == 200) {
+        var data = JSON.parse(this.responseText);
+        console.log(data);
+        artistList(data);
+    } else if (this.status == 401) {
+        refreshAccessToken();
+    } else {
+        console.log(this.responseText);
+        alert(this.responseText);
     }
 }
+
+function handleSongResponse() {
+  if (this.status == 200) {
+    var data = JSON.parse(this.responseText);
+    console.log(data);
+    songList(data);
+  } else if (this.status == 401) {
+    refreshAccessToken();
+  } else {
+    console.log(this.responseText);
+    alert(this.responseText);
+  }
+}
+
+function artistList(data) {
+  favArtistList.innerHTML = '';
+  for (i = 0; i < data.items.length; i++) {
+      const artist = document.createElement('li');
+      artist.innerHTML = `<img class='artist-img' src='${data.items[i].images[0].url}' alt=''></img><h3 class='artist-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
+      favArtistList.appendChild(artist);
+  }
+}
+
+function songList(data) {
+  favSongList.innerHTML = '';
+  for (i = 0; i < data.items.length; i++) {
+      const song = document.createElement('li');
+      song.innerHTML = `<img class='song-img' src='${data.items[i].album.images[0].url}' alt=''></img><h3 class='song-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
+      favSongList.appendChild(song);
+  }
+
+  // let recommendations = runPythonScript(data);
+  // Set HTML elements to have the recommendations like songList and artistList
+
+}
+
+function songDict(data) {
+  trackListDict = "";
+  trackDict = {};
+  title = "";
+  year = "";
+  for (i = 0; i < data.items.length; i++) {
+    title.innerHTML = data.items[i].name;
+    year.innerHTML = Number(data.items[i].album.releasedate.slice(0,4));
+    trackDict = {
+      'name': title,
+      'year': year,
+    }
+    const trackListDict = document.createElement("li");
+    trackListDict.append(trackDict);
+  }
+}
+
+const response = await fetch("http://localhost:8888/callback", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(trackListDict),
+});
