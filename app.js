@@ -19,48 +19,38 @@ app.get('/callback', (req, res) => {
     res.render(__dirname + '/views/main.ejs');
 })
 
-// app.post('/callback', async (req, res) => { 
-
-//     const data = req.body; 
-
-//     const result = await runPythonScript(data);
-
-//     res.send(result); 
-
-// });
-
 app.get("/callback", (req, res) => {
   res.render(__dirname + "/views/main.ejs");
 });
 
-/* Get data from website and send result from Python script */
-app.post("/callback", async (req, res) => {
-  const data = req.body;
+// /* Get data from website and send result from Python script */
+// app.post("/callback", async (req, res) => {
+//   const data = req.body;
 
-  const result = await runPythonScript(data);
+//   const result = await runPythonScript(data);
 
-  res.send(result);
-});
+//   res.send(result);
+// });
 
 app.listen(port, () => console.info(`http://localhost:${port}`));
 
-/* Run Python model on website*/
-async function runPythonScript(data) {
-  const { spawn } = require("child_process");
+// /* Run Python model on website*/
+// async function runPythonScript(data) {
+//   const { spawn } = require("child_process");
 
-  /* Has to be python installation path */
-  const pythonProcess = spawn(
-    "C:\\Users\\powellt1\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
-    ["recommendation/model.py", JSON.stringify(data)]
-  ); 
+//   /* Has to be python installation path */
+//   const pythonProcess = spawn(
+//     "C:\\Users\\powellt1\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+//     ["recommendation/model.py", JSON.stringify(data)]
+//   ); 
 
-  return new Promise((resolve, reject) => {
-    pythonProcess.stdout.on("data", (data) => {
-      resolve(JSON.parse(data));
-    });
+//   return new Promise((resolve, reject) => {
+//     pythonProcess.stdout.on("data", (data) => {
+//       resolve(JSON.parse(data));
+//     });
 
-    pythonProcess.stderr.on("data", (data) => {
-      reject(new Error(`Error running Python script: ${data}`));
-    });
-  });
-}
+//     pythonProcess.stderr.on("data", (data) => {
+//       reject(new Error(`Error running Python script: ${data}`));
+//     });
+//   });
+// }

@@ -8,28 +8,16 @@ var clientSecret = '6232df2c5d28412b93837c891ac88214'; // Your secret
 const AUTHORIZE = "https://accounts.spotify.com/authorize";
 
 const TOKEN = "https://accounts.spotify.com/api/token";
-// const ARTISTS = "https://api.spotify.com/v1/me/top/artists?offset=0&limit=10&time_range=short_term"
-const ARTISTS = "https://api.spotify.com/v1/me/top/artists"
-const TRACKS = "https://api.spotify.com/v1/me/top/tracks"
-// const ARTISTS = "https://api.spotify.com/v1/me/top/artists?offset=0&limit=10&time_range=short_term"
 const ARTISTS = "https://api.spotify.com/v1/me/top/artists"
 const TRACKS = "https://api.spotify.com/v1/me/top/tracks"
 
-const rankingList = document.getElementById('ranking-list');
 const favSongList = document.getElementById('favorite-song-list');
 const favArtistList = document.getElementById('favorite-artist-list');
-const headers = document.getElementById('tr-header');
-const start = document.getElementById('start');
-const favSongList = document.getElementById('favorite-song-list');
-const favArtistList = document.getElementById('favorite-artist-list');
-const headers = document.getElementById('tr-header');
 const start = document.getElementById('start');
 const number = document.getElementById('nosong');
 const time = document.getElementById('timerange');
 
 
-function buildRequest(baseURL) {
-    let url = baseURL;
 function buildRequest(baseURL) {
     let url = baseURL;
     url += '?';
@@ -50,13 +38,10 @@ function authorize() {
 }
 
 function loadData() {
-function loadData() {
     if (window.location.search.length > 0) {
         handleRedirect();
     }
     else {
-        // rankList();
-        // rankList();
         getSongs();
         getArtists();
         getArtists();
@@ -116,8 +101,6 @@ function handleAuthResponse() {
             refresh_token = data.refresh_token;
             localStorage.setItem("refresh_token", refresh_token);
         }
-        // rankList();
-        // rankList();
         getSongs();
         getArtists();
         getArtists();
@@ -133,11 +116,6 @@ function getSongs() {
 
 function getArtists() {
     callApi("GET", buildRequest(ARTISTS), null, handleArtistResponse);
-    callApi("GET", buildRequest(TRACKS), null, handleSongResponse);
-}
-
-function getArtists() {
-    callApi("GET", buildRequest(ARTISTS), null, handleArtistResponse);
 }
 
 function callApi (method, url, body, callback) {
@@ -147,28 +125,6 @@ function callApi (method, url, body, callback) {
     xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("access_token"));
     xhr.send(body);
     xhr.onload = callback;
-}
-function callApi (method, url, body, callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open(method, url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("access_token"));
-    xhr.send(body);
-    xhr.onload = callback;
-}
-
-function handleSongResponse() {
-    if (this.status == 200) {
-        var data = JSON.parse(this.responseText);
-        console.log(data);
-        songList(data);
-        songDict(data);
-    } else if (this.status == 401) {
-        refreshAccessToken();
-    } else {
-        console.log(this.responseText);
-        alert(this.responseText);
-    }
 }
 
 function handleArtistResponse() {
@@ -188,6 +144,7 @@ function handleSongResponse() {
   if (this.status == 200) {
     var data = JSON.parse(this.responseText);
     console.log(data);
+    songDict(data);
     songList(data);
   } else if (this.status == 401) {
     refreshAccessToken();
@@ -206,56 +163,6 @@ function artistList(data) {
   }
 }
 
-function handleArtistResponse() {
-    if (this.status == 200) {
-        var data = JSON.parse(this.responseText);
-        console.log(data);
-        artistList(data);
-    } else if (this.status == 401) {
-        refreshAccessToken();
-    } else {
-        console.log(this.responseText);
-        alert(this.responseText);
-    }
-}
-
-// function displayData(songs, artists) {
-//     rankingList.innerHTML = '';
-//     favSongList.innerHTML = '';
-//     favArtistList.innerHTML = '';
-//     console.log('songs:', songs);
-//     console.log('artists:', artists);
-//     for (i = 0; i < 10; i++) {
-//         const song = document.createElement('li');
-//         const rank = document.createElement('li');
-//         const artist = document.createElement('li');
-//         song.innerHTML = songs.items[i].name;
-//         artist.innerHTML = artists.items[i].name;
-//         rank.innerHTML = i+1;
-//         favSongList.appendChild(song);
-//         favArtistList.appendChild(artist);
-//         rankingList.appendChild(rank);
-//     }
-// }
-
-// function rankList() {
-//     rankingList.innerHTML = '';
-//     for (i = 0; i < parseInt(number.value); i++) {
-//         const rank = document.createElement('li');
-//         rank.innerHTML = i+1;
-//         rankingList.appendChild(rank);
-//     }
-// }
-
-function artistList(data) {
-    favArtistList.innerHTML = '';
-    for (i = 0; i < data.items.length; i++) {
-        const artist = document.createElement('li');
-        artist.innerHTML = `<img class='artist-img' src='${data.items[i].images[0].url}' alt=''></img><h3 class='artist-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
-        favArtistList.appendChild(artist);
-    }
-}
-
 function songList(data) {
   favSongList.innerHTML = '';
   for (i = 0; i < data.items.length; i++) {
@@ -263,10 +170,6 @@ function songList(data) {
       song.innerHTML = `<img class='song-img' src='${data.items[i].album.images[0].url}' alt=''></img><h3 class='song-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
       favSongList.appendChild(song);
   }
-
-  // let recommendations = runPythonScript(data);
-  // Set HTML elements to have the recommendations like songList and artistList
-
 }
 
 function songDict(data) {
@@ -275,8 +178,8 @@ function songDict(data) {
   title = "";
   year = "";
   for (i = 0; i < data.items.length; i++) {
-    title.innerHTML = data.items[i].name;
-    year.innerHTML = Number(data.items[i].album.releasedate.slice(0,4));
+    title = data.items[i].name;
+    year = Number(data.items[i].album.releasedate.slice(0,4));
     trackDict = {
       'name': title,
       'year': year,
@@ -284,21 +187,9 @@ function songDict(data) {
     const trackListDict = document.createElement("li");
     trackListDict.append(trackDict);
   }
-}
+  let recommendations = runPythonScript(trackDict);
 
-const response = await fetch("http://localhost:8888/callback", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify(trackListDict),
-});
-
-
-
-    // let recommendations = runPythonScript(data);
-    // Set HTML elements to have the recommendations like songList and artistList
-
+  return recommendations;
 }
 
 async function runPythonScript(data) { 
@@ -323,4 +214,4 @@ async function runPythonScript(data) {
 
     }); 
 
-};
+}
