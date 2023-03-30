@@ -43,7 +43,7 @@ table {
     table-layout: auto !important;
 }
 td {
-    max-width: 15% !important;
+    max-width: 10em !important;
     vertical-align: top !important;
     margin: 0 !important;
     padding-bottom: 3em !important;

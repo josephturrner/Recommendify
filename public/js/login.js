@@ -240,7 +240,14 @@ function handleRecsResponse() {
 
 function artistList(data) {
 
-    artistSeed = `${data.items[0].id},${data.items[1].id}`
+    for (i = 0; i < 2; i++) {
+        let ran = Math.floor(Math.random() * number.value);
+        console.log(ran);
+        artistSeed += `${data.items[ran].id}`
+        if (i < 1) {
+            artistSeed += ',';
+        }
+    }
 
     // Option to change the recommendation criteria to use genre as well; would require some rewrites in songSeed and artistSeed because only 5 total seds are allowed
     // genreSeed = `${data.items[0].genres[0]}`
@@ -255,7 +262,20 @@ function artistList(data) {
 
 function songList(data) {
 
-    songSeed = `${data.items[0].id},${data.items[1].id},${data.items[2].id}`
+    let max = number.value;
+
+    if (max == 50) {
+        max = 41
+    }
+
+    for (i = 0; i < 3; i++) {
+        let ran = Math.floor(Math.random() * max);
+        console.log(ran);
+        songSeed += `${data.items[ran].id}`
+        if (i < 2) {
+            songSeed += ',';
+        }
+    }
 
     favSongList.innerHTML = '';
     for (i = 0; i < data.items.length; i++) {
