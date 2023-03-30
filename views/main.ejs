@@ -17,28 +17,28 @@
     
         <section class="container">
             <h2>Search Options</h2>
+            <p>Only 40 top songs are stored by Spotify, so only 40 can be displayed. When 50 is selected, 50 artists and recommendations will be displayed, but only 40 songs.</p>
             <form action='localhost:8888/callback/' method='post' id="form">
                 <fieldset>
                     <div class="input-container">
-                        <label>No. of items</label>
+                        <label>No. of items (3-50)</label>
                         <div class="select-wrapper">
-                            <input id="nosong" type="number" max="50" min="1" name="limit" placeholder=""/>
+                            <input value='3' id="nosong" type="number" max="25" min="3" name="limit" placeholder="3"/>
                         </div>
                     </div>
-                    <div class="input-container">
-                        <label>Starting at item:</label>
+                    <!-- <div class="input-container">
+                        <label>Starting at item (0-25):</label>
                         <div class="select-wrapper">
-                            <input id="start" type="number" max="50" min="0" name="offset" placeholder=""/>
+                            <input value='0' id="start" type="number" max="25" min="0" name="offset" placeholder="0"/>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="input-container">
                         <label>Time Range</label>
                         <div class="select-wrapper">
                             <select id="timerange" name="time_range">
-                                <option hidden value="invalid">Select Timeframe</option>
-                                <option value="long_term">Long Term (Years)</option>
-                                <option value="medium_term">Medium Term (6 months)</option>
                                 <option value="short_term">Short Term (1 month)</option>
+                                <option value="medium_term">Medium Term (6 months)</option>
+                                <option value="long_term">Long Term (Years)</option>
                             </select>
                         </div>
                     </div>
@@ -47,21 +47,9 @@
             </form>
         </section>
 
-        <table cols="3">
-            <thead>
-                <tr id='tr-header'>
-                    <!-- <th>Ranking</th> -->
-                    <th>Top Artists</th>
-                    <th>Top Songs</th>
-                    <th>Song Recommendations</th>
-                </tr>
-            </thead>
+        <table id='info-table' cols="3">
             <tbody>
                 <tr>
-                    <!-- <td>
-                        <ol id='ranking-list' class="ranking">
-                        </ol>
-                    </td> -->
                     <td>
                         <ol class="favorite" id="favorite-artist-list">
                         </ol>
@@ -72,16 +60,6 @@
                     </td>
                     <td class="recommend-data">
                         <ol id="recommended-list">
-                            <li>Welcome to Paradise</li>
-                            <li>Excuse Me</li>
-                            <li>Cant Say</li>
-                            <li>Ride the Lightning</li>
-                            <li>Yeah Right</li>
-                            <li>Butterfly Effect</li>
-                            <li>I Was Made for Lovin You</li>
-                            <li>Hotel Lobby</li>
-                            <li>Redbone</li>
-                            <li>Kickstart My Heart</li>
                         </ol>
                     </td>
                 </tr>

@@ -5,25 +5,58 @@ var clientSecret = '6232df2c5d28412b93837c891ac88214'; // Your secret
 
 const AUTHORIZE = "https://accounts.spotify.com/authorize";
 
+const BASE = "https://api.spotify.com/v1";
 const TOKEN = "https://accounts.spotify.com/api/token";
-const ARTISTS = "https://api.spotify.com/v1/me/top/artists"
-const TRACKS = "https://api.spotify.com/v1/me/top/tracks"
+const ARTISTS = "https://api.spotify.com/v1/me/top/artists";
+const TRACKS = "https://api.spotify.com/v1/me/top/tracks";
+const RECS = "https://api.spotify.com/v1/recommendations"
 
 const favSongList = document.getElementById('favorite-song-list');
 const favArtistList = document.getElementById('favorite-artist-list');
 const recList = document.getElementById('recommended-list');
+const headers = document.getElementById('info-table');
+const heads = ['Top Songs', 'Top Artists', 'Recommendations'];
 const start = document.getElementById('start');
 const number = document.getElementById('nosong');
 const time = document.getElementById('timerange');
+
+let songSeed = "";
+let genreSeed = "";
+let artistSeed = "";
+
+let submissions = 0;
+
+function checkInput() {
+    if (number.value >= 3 && number.value <= 50) {
+        return true;
+    }
+    return false
+}
 
 
 function buildRequest(baseURL) {
     let url = baseURL;
     url += '?';
-    url += `offset=${start.value}`
-    url += `&limit=${number.value}`
-    url += `&time_range=${time.value}`
+    // url += `offset=${start.value}`;
+    url += 'offset=0';
+    url += `&limit=${number.value}`;
+    url += `&time_range=${time.value}`;
     return url;
+}
+
+function buildRecRequest() {
+
+    let url = RECS;
+    url += '?';
+    url += `limit=${number.value}`;
+    url += `&seed_artists=${artistSeed}`;
+    url += `&seed_genres=${genreSeed}`;
+    url += `&seed_tracks=${songSeed}`;
+
+    console.log(url);
+
+    return url;
+
 }
 
 function authorize() {
@@ -37,13 +70,32 @@ function authorize() {
 }
 
 function loadData() {
-    if (window.location.search.length > 0) {
-        handleRedirect();
-    }
-    else {
-        getSongs();
-        getArtists();
-        getArtists();
+
+    if (checkInput()) {
+        if (submissions == 0) {
+            const thead = document.createElement('thead');
+            for (i = 0; i < heads.length; i++) {
+                const head = document.createElement('th');
+                head.innerHTML = heads[i];
+                thead.appendChild(head);
+            }
+            headers.insertBefore(thead, headers.firstChild);
+    
+            submissions++;
+        }
+    
+        if (window.location.search.length > 0) {
+            handleRedirect();
+        }
+        else {
+            getSongs()
+                .then(() => {
+                    return getArtists();
+                })
+                .then(() => {
+                    return getRecs();
+                })
+        }
     }
 }
 
@@ -100,8 +152,13 @@ function handleAuthResponse() {
             refresh_token = data.refresh_token;
             localStorage.setItem("refresh_token", refresh_token);
         }
-        getSongs();
-        getArtists();
+        getSongs()
+            .then(() => {
+                return getArtists();
+            })
+            .then(() => {
+                return getRecs();
+            })
     } else {
         console.log(this.responseText);
         alert(this.responseText);
@@ -109,11 +166,24 @@ function handleAuthResponse() {
 }
 
 function getSongs() {
-    callApi("GET", buildRequest(TRACKS), null, handleSongResponse);
+    return new Promise(resolve => {
+        callApi("GET", buildRequest(TRACKS), null, handleSongResponse);
+        resolve();
+    });
 }
 
 function getArtists() {
-    callApi("GET", buildRequest(ARTISTS), null, handleArtistResponse);
+    return new Promise(resolve => {
+        callApi("GET", buildRequest(ARTISTS), null, handleArtistResponse);
+        resolve();
+    });
+}
+
+function getRecs() {
+    return new Promise(resolve => {
+        callApi("GET", buildRecRequest(), null, handleRecsResponse);
+        resolve();
+    });
 }
 
 function callApi (method, url, body, callback) {
@@ -152,30 +222,55 @@ function handleSongResponse() {
   }
 }
 
-function artistList(data) {
-  favArtistList.innerHTML = '';
-  for (i = 0; i < data.items.length; i++) {
-      const artist = document.createElement('li');
-      artist.innerHTML = `<img class='artist-img' src='${data.items[i].images[0].url}' alt=''></img><h3 class='artist-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
-      favArtistList.appendChild(artist);
+function handleRecsResponse() {
+    if (this.status == 200) {
+      var data = JSON.parse(this.responseText);
+      console.log(data);
+      recommendList(data);
+    } else if (this.status == 401) {
+      refreshAccessToken();
+    } else if (this.status == 400) {
+        // Invalid request will only return when the other functions have not completed, so keep running until it works
+        getRecs();
+    } else {
+      console.log(this.responseText);
+      alert(this.responseText);
+    }
   }
+
+function artistList(data) {
+
+    artistSeed = `${data.items[0].id},${data.items[1].id}`
+
+    // Option to change the recommendation criteria to use genre as well; would require some rewrites in songSeed and artistSeed because only 5 total seds are allowed
+    // genreSeed = `${data.items[0].genres[0]}`
+
+    favArtistList.innerHTML = '';
+    for (i = 0; i < data.items.length; i++) {
+        const artist = document.createElement('li');
+        artist.innerHTML = `<img class='artist-img' src='${data.items[i].images[0].url}' alt=''></img><h3 class='artist-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
+        favArtistList.appendChild(artist);
+    }
 }
 
 function songList(data) {
-  favSongList.innerHTML = '';
-  for (i = 0; i < data.items.length; i++) {
-      const song = document.createElement('li');
-      song.innerHTML = `<img class='song-img' src='${data.items[i].album.images[0].url}' alt=''></img><h3 class='song-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
-      favSongList.appendChild(song);
-  }
+
+    songSeed = `${data.items[0].id},${data.items[1].id},${data.items[2].id}`
+
+    favSongList.innerHTML = '';
+    for (i = 0; i < data.items.length; i++) {
+        const song = document.createElement('li');
+        song.innerHTML = `<img class='song-img' src='${data.items[i].album.images[0].url}' alt=''></img><h3 class='song-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
+        favSongList.appendChild(song);
+    }
 }
 
 function recommendList(data) {
     recList.innerHTML = '';
-    for (i = 0; i < data.items.length; i++) {
+    for (i = 0; i < data.tracks.length; i++) {
         const rec = document.createElement('li');
-        rec.innerHTML = `<h3 class='song-name'>${data.items[i].name}</h3>`;
-        recList.appendChild(song);
+        rec.innerHTML = `<img class='song-img' src='${data.tracks[i].album.images[0].url}' alt=''></img><h3 class='song-name'><a href='${data.tracks[i].external_urls.spotify}'>${data.tracks[i].name}</a></h3>`;
+        recList.appendChild(rec);
     }
 }
 

@@ -27,7 +27,7 @@ p {
 }
 header {
     width: 100% !important;
-    margin: 0 !important;
+    margin: 0 auto !important;
     background-color: whitesmoke !important;
     color: var(--spotify-black) !important;
     padding: 25px 0px 10px !important;
@@ -70,7 +70,7 @@ button:focus {
 }
 img {
     width: 2em !important;
-    margin: auto 1em !important
+    margin: auto !important
 }
 h2 {
     margin: 1em !important;

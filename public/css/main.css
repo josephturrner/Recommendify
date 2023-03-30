@@ -9,6 +9,13 @@
 html {
     height: 100%;
 }
+p {
+    font-size: medium !important;
+    font-weight: 400 !important;
+    text-align: center !important;
+    width: 45% !important;
+    margin: 1em auto !important;
+}
 body {
     font-weight: 700 !important;
     text-align: center !important;
@@ -17,7 +24,7 @@ body {
 }
 header {
     width: 100%;
-    margin: 0 !important;
+    margin: 0 auto !important;
     background-color: whitesmoke !important;
     color: var(--spotify-black) !important;
     padding: 25px 0px 10px !important;
@@ -30,17 +37,16 @@ h1 {
 }
 table {
     border-radius: 1em;
-    margin: 5em 5em 0 5em !important;
+    margin: 5em auto 0 !important;
     text-align: center !important;
     width: 90% !important;
     table-layout: auto !important;
 }
 td {
+    max-width: 15% !important;
+    vertical-align: top !important;
     margin: 0 !important;
     padding-bottom: 3em !important;
-}
-.recommend-data {
-    vertical-align: top !important;
 }
 ol {
     list-style: none !important;
@@ -53,7 +59,7 @@ li {
 }
 img {
     width: 2em !important;
-    margin: auto 1em !important
+    margin: auto !important
 }
 thead {
     text-align: center !important;
