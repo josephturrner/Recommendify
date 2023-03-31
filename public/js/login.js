@@ -9,16 +9,19 @@ const BASE = "https://api.spotify.com/v1";
 const TOKEN = "https://accounts.spotify.com/api/token";
 const ARTISTS = "https://api.spotify.com/v1/me/top/artists";
 const TRACKS = "https://api.spotify.com/v1/me/top/tracks";
-const RECS = "https://api.spotify.com/v1/recommendations"
+const RECS = "https://api.spotify.com/v1/recommendations";
 
 const favSongList = document.getElementById('favorite-song-list');
 const favArtistList = document.getElementById('favorite-artist-list');
 const recList = document.getElementById('recommended-list');
-const headers = document.getElementById('info-table');
+const table = document.getElementById('info-table');
 const heads = ['Top Artists', 'Top Songs', 'Recommendations'];
-const start = document.getElementById('start');
+// const start = document.getElementById('start');
 const number = document.getElementById('nosong');
 const time = document.getElementById('timerange');
+
+let songData = "";
+let artistData = "";
 
 let songSeed = "";
 let genreSeed = "";
@@ -27,7 +30,8 @@ let artistSeed = "";
 let submissions = 0;
 
 function checkInput() {
-    if (number.value >= 3 && number.value <= 50) {
+    console.log(number.min);
+    if (number.value >= Number(number.min) && number.value <= Number(number.max)) {
         return true;
     }
     return false
@@ -69,6 +73,16 @@ function authorize() {
     window.location.href = url;
 }
 
+function scrollToTable() {
+
+    console.log('Scrolling');
+
+    window.scrollTo({
+        top: table.offsetTop,
+        behavior: 'smooth'
+    });
+}
+
 function loadData() {
 
     if (checkInput()) {
@@ -79,7 +93,7 @@ function loadData() {
                 head.innerHTML = heads[i];
                 thead.appendChild(head);
             }
-            headers.insertBefore(thead, headers.firstChild);
+            table.insertBefore(thead, table.firstChild);
     
             submissions++;
         }
@@ -95,6 +109,9 @@ function loadData() {
                 .then(() => {
                     return getRecs();
                 })
+            setTimeout(() => {
+                scrollToTable();
+            }, 500);
         }
     }
 }
@@ -159,6 +176,9 @@ function handleAuthResponse() {
             .then(() => {
                 return getRecs();
             })
+            setTimeout(() => {
+                scrollToTable();
+            }, 500);
     } else {
         console.log(this.responseText);
         alert(this.responseText);
@@ -240,6 +260,8 @@ function handleRecsResponse() {
 
 function artistList(data) {
 
+    artistData = data;
+
     for (i = 0; i < 2; i++) {
         let ran = Math.floor(Math.random() * number.value);
         console.log(ran);
@@ -263,6 +285,7 @@ function artistList(data) {
 function songList(data) {
 
     let max = number.value;
+    songData = data;
 
     if (max == 50) {
         max = 41
@@ -314,6 +337,21 @@ function songDict(data) {
   let recommendations = runPythonScript(trackDict);
 
   recommendList(recommendations);
+}
+
+async function sendTrackData(trackListDict) {
+    console.log(JSON.stringify(trackListDict));
+    const response = await fetch("http://localhost:8888/callback", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(trackListDict),
+    });
+
+    const recommendations = await response.json();
+
+    recommendList(recommendations);
 }
 
 // const response = await fetch("http://localhost:8888/callback", {

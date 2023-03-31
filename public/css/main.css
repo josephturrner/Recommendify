@@ -160,7 +160,10 @@ li {
     height: 20% !important;
     padding-top: 5% !important;
 }
+.song-name, .artist-name {
+    font-size: 1.25rem !important;
+}
 img.artist-img, img.song-img {
-    width: 10em !important;
-    height: 10em !important;
+    width: 5em !important;
+    height: 5em !important;
 }
