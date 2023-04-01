@@ -71,7 +71,6 @@ function authorize() {
 
 // Checks that the input values are valid
 function checkInput() {
-    console.log(number.min);
     if (number.value >= Number(number.min) && number.value <= Number(number.max)) {
         return true;
     }
@@ -269,7 +268,7 @@ function handleArtistResponse() {
     // Success
     if (this.status == 200) {
         var data = JSON.parse(this.responseText);
-        // console.log(data);
+        console.log(data);
         artistList(data);
     } else if (this.status == 401) {
         refreshAccessToken();
@@ -285,7 +284,7 @@ function handleSongResponse() {
     // Success
     if (this.status == 200) {
         var data = JSON.parse(this.responseText);
-        // console.log(data);
+        console.log(data);
         songList(data);
         songDict(data);
     } else if (this.status == 401) {
@@ -321,7 +320,6 @@ function artistList(data) {
     // Randomly select returned artists to be used as seed in the recommendation API request
     for (i = 0; i < 2; i++) {
         let ran = Math.floor(Math.random() * number.value);
-        console.log(ran);
         artistSeed += `${data.items[ran].id}`
         if (i < 1) {
             artistSeed += ',';
@@ -354,7 +352,6 @@ function songList(data) {
     // Randomly select returned songs to be used as the seed for the recommendations
     for (i = 0; i < 3; i++) {
         let ran = Math.floor(Math.random() * max);
-        console.log(ran);
         songSeed += `${data.items[ran].id}`
         if (i < 2) {
             songSeed += ',';
