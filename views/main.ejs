@@ -9,8 +9,8 @@
     <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
-<!-- <body> -->
-    <div>
+    <button id="open-button" class="toggle" onclick="toggleDrawer()">Custom</button>
+    <div id="content">
         <header>
             <h1><img src="images/8th.png" alt=""/>Recommendify<img src="images/double8th.png" alt=""/></h1>
         </header>
@@ -45,6 +45,12 @@
                 <button onclick="loadData()">Submit</button>
             </form>
         </section>
+
+        <div class="seed display">
+            <h3 class="list header">Seeds:</h3>
+            <ol id="custom-list" class="inline list">
+            </ol>
+        </div>
 
         <table id='info-table' cols="3">
             <tbody>

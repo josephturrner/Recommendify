@@ -37,18 +37,85 @@ const number = document.getElementById('nosong');
 // Time range to fetch from: consistent across artists and songs
 const time = document.getElementById('timerange');
 
+const custom = document.getElementById('custom-list');
+
 // Unused for now
-// let songData;
-// let artistData;
+let songData;
+let artistData;
+
+let seeds = 0;
 
 // Vars to store the seeds for the recommendation requests: needed because the info needs to be globally available
 // Could use callback functions, but we chose against it
-let songSeed = "";
+// let songSeed = "";
 let genreSeed = "";
-let artistSeed = "";
+// let artistSeed = "";
+let songSeed = [];
+let artistSeed = [];
 
 // Used for creating the headers in the table; the headers should only be created once
 let submissions = 0;
+
+function toggleAddArtist(index) {
+    const inputButton = document.getElementById(`artist-${index}`);
+
+    if (inputButton.classList.contains('selected')) {
+        console.log('Removing artist seed ' + artistData.items[index].id);
+        inputButton.classList.toggle('selected');
+        inputButton.innerText = '+';
+        artistSeed = artistSeed.filter(a => a !== artistData.items[index].id);
+        console.log(artistSeed);
+        seeds--;
+        // const l = document.getElementById(`artist-${index}`);
+        // l.remove();
+    } else if (seeds < 5) {
+        console.log('Adding artist seed ' + artistData.items[index].id);
+        inputButton.classList.toggle('selected');
+        inputButton.innerText = '-';
+        artistSeed.push(artistData.items[index].id);
+        console.log(artistSeed);
+        seeds++;
+        // const l = document.createElement('li');
+        // l.id = `artist-${index}`;
+        // l.classList.add('custom-item');
+        // l.innerHTML = `${artistData.items[index].name}`;
+        // custom.appendChild(l);
+    } else {
+        alert('Maximum number of seeds selected (max = 5). Remove 1 to add another or submit.');
+        return;
+    }
+}
+
+function toggleAddSong(index) {
+    const inputButton = document.getElementById(`song-${index}`);
+
+    if (inputButton.classList.contains('selected')) {
+        console.log('Removing song seed ' + songData.items[index].id);
+        inputButton.classList.toggle('selected');
+        inputButton.innerText = '+';
+        songSeed = songSeed.filter(a => a !== songData.items[index].id);
+        console.log(songSeed);
+        seeds--;
+        // const l = document.getElementById(`song-${index}`);
+        // l.remove();
+    } else if (seeds < 5) {
+        console.log('Adding song seed ' + songData.items[index].id);
+        inputButton.classList.toggle('selected');
+        inputButton.innerText = '-';
+        songSeed.push(songData.items[index].id);
+        console.log(songSeed);
+        seeds++;
+        // const l = document.createElement('li');
+        // l.id = `song-${index}`;
+        // l.classList.add('custom-item');
+        // l.innerHTML = `${songData.items[index].name}`;
+        // custom.appendChild(l);
+    } else {
+        alert('Maximum number of seeds selected (max = 5). Remove 1 to add another or submit.');
+        return;
+    }
+}
+
 
 /**
  * Authorization functions used to login using Spotify API
@@ -90,12 +157,14 @@ function buildRequest(baseURL) {
 
 // Builds url for api request from the global RECS endpoint; only used by the recommendations flow
 function buildRecRequest() {
+    console.log('Artist Seeds:', artistSeed.toString());
+    console.log('Song Seeds:', songSeed.toString());
     let url = RECS;
     url += '?';
     url += `limit=${number.value}`;
-    url += `&seed_artists=${artistSeed}`;
+    url += `&seed_artists=${artistSeed.toString()}`;
     url += `&seed_genres=${genreSeed}`;
-    url += `&seed_tracks=${songSeed}`;
+    url += `&seed_tracks=${songSeed.toString()}`;
     return url;
 }
 
@@ -286,7 +355,6 @@ function handleSongResponse() {
         var data = JSON.parse(this.responseText);
         console.log(data);
         songList(data);
-        songDict(data);
     } else if (this.status == 401) {
         refreshAccessToken();
     } else {
@@ -315,14 +383,15 @@ function handleRecsResponse() {
 // Creates the HTML code for the artists. Also updates the artist and genre seeds to be used in the recommendation API request
 function artistList(data) {
 
-    // artistData = data;
+    artistData = data;
 
-    // Randomly select returned artists to be used as seed in the recommendation API request
-    for (i = 0; i < 2; i++) {
-        let ran = Math.floor(Math.random() * number.value);
-        artistSeed += `${data.items[ran].id}`
-        if (i < 1) {
-            artistSeed += ',';
+    // If it isn't custom
+    if (seeds == 0) {
+        console.log('Getting artist seeds');
+        // Randomly select returned artists to be used as seed in the recommendation API request
+        for (i = 0; i < 2; i++) {
+            let ran = Math.floor(Math.random() * 10);
+            artistSeed.push(`${data.items[ran].id}`);
         }
     }
 
@@ -333,7 +402,7 @@ function artistList(data) {
     favArtistList.innerHTML = '';
     for (i = 0; i < data.items.length; i++) {
         const artist = document.createElement('li');
-        artist.innerHTML = `<img class='artist-img' src='${data.items[i].images[0].url}' alt=''></img><h3 class='artist-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
+        artist.innerHTML = `<img class='artist-img' src='${data.items[i].images[0].url}' alt=''><button id="artist-${i}" class="add artist" onclick="toggleAddArtist(${i})">+</button></img><h3 class='artist-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
         favArtistList.appendChild(artist);
     }
 }
@@ -341,20 +410,14 @@ function artistList(data) {
 // Creates the HTML code for the songs. Also updates the song seed to be used in the recommendation API request
 function songList(data) {
 
-    let max = number.value;
     songData = data;
 
-    // Only 40 artists are stored, so prevent a request for more info than is available
-    if (max == 50) {
-        max = 41
-    }
-
-    // Randomly select returned songs to be used as the seed for the recommendations
-    for (i = 0; i < 3; i++) {
-        let ran = Math.floor(Math.random() * max);
-        songSeed += `${data.items[ran].id}`
-        if (i < 2) {
-            songSeed += ',';
+    if (seeds == 0) {
+        console.log('Getting song seeds');
+        // Randomly select returned artists to be used as seed in the recommendation API request
+        for (i = 0; i < 3; i++) {
+            let ran = Math.floor(Math.random() * 10);
+            songSeed.push(`${data.items[ran].id}`);
         }
     }
 
@@ -362,19 +425,25 @@ function songList(data) {
     favSongList.innerHTML = '';
     for (i = 0; i < data.items.length; i++) {
         const song = document.createElement('li');
-        song.innerHTML = `<img class='song-img' src='${data.items[i].album.images[0].url}' alt=''></img><h3 class='song-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
+        song.innerHTML = `<img class='song-img' src='${data.items[i].album.images[0].url}' alt=''><button id="song-${i}" class="add song" onclick="toggleAddSong(${i})">+</button></img><h3 class='song-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
         favSongList.appendChild(song);
     }
 }
 
 // Create HTML code for the recommendations list
 function recommendList(data) {
+
     recList.innerHTML = '';
     for (i = 0; i < data.tracks.length; i++) {
         const rec = document.createElement('li');
         rec.innerHTML = `<img class='song-img' src='${data.tracks[i].album.images[0].url}' alt=''></img><h3 class='song-name'><a href='${data.tracks[i].external_urls.spotify}'>${data.tracks[i].name}</a></h3>`;
         recList.appendChild(rec);
     }
+
+    songSeed = [];
+    artistSeed = [];
+    seeds = 0;
+    custom.innerHTML = '';
 }
 
 // Using python recommendation algorithm
