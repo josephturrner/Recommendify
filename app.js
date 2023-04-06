@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const port = 8888;
-const root = __dirname;
 
 app.use(express.static('/public/'));
 app.use('/css', express.static(__dirname + '/public/css'));
@@ -18,6 +17,10 @@ app.get('/callback', (req, res) => {
   res.render(__dirname + '/views/main.ejs');
 })
 
+app.listen(port, () => console.info(`http://localhost:${port}`));
+
+
+
 // app.post('/callback', async (req, res) => { 
 
 //   const data = req.body; 
@@ -27,8 +30,6 @@ app.get('/callback', (req, res) => {
 //   res.send(result); 
 
 // });
-
-app.listen(port, () => console.info(`http://localhost:${port}`));
 
 // async function runPythonScript(data) { 
 

@@ -37,7 +37,9 @@ const number = document.getElementById('nosong');
 // Time range to fetch from: consistent across artists and songs
 const time = document.getElementById('timerange');
 
-const custom = document.getElementById('custom-list');
+const seedList = document.getElementById('seed-list');
+
+const seedHeader = document.getElementById('seed-header');
 
 // Unused for now
 let songData;
@@ -66,23 +68,32 @@ function toggleAddArtist(index) {
         artistSeed = artistSeed.filter(a => a !== artistData.items[index].id);
         console.log(artistSeed);
         seeds--;
-        // const l = document.getElementById(`artist-${index}`);
-        // l.remove();
+        const l = document.getElementById(`artist-seed-${index}`);
+        l.remove();
+
+        if (seeds == 0) {
+            seedHeader.innerText = '';
+        }
+
     } else if (seeds < 5) {
         console.log('Adding artist seed ' + artistData.items[index].id);
         inputButton.classList.toggle('selected');
         inputButton.innerText = '-';
         artistSeed.push(artistData.items[index].id);
         console.log(artistSeed);
+
+        if (seeds == 0) {
+            seedHeader.innerText = 'Seeds:'
+        }
+
         seeds++;
-        // const l = document.createElement('li');
-        // l.id = `artist-${index}`;
-        // l.classList.add('custom-item');
-        // l.innerHTML = `${artistData.items[index].name}`;
-        // custom.appendChild(l);
+        const l = document.createElement('li');
+        l.id = `artist-seed-${index}`
+        l.innerText = `${artistData.items[index].name}`;
+        l.classList.add('seed-item');
+        seedList.appendChild(l);
     } else {
         alert('Maximum number of seeds selected (max = 5). Remove 1 to add another or submit.');
-        return;
     }
 }
 
@@ -96,23 +107,32 @@ function toggleAddSong(index) {
         songSeed = songSeed.filter(a => a !== songData.items[index].id);
         console.log(songSeed);
         seeds--;
-        // const l = document.getElementById(`song-${index}`);
-        // l.remove();
+        const l = document.getElementById(`song-seed-${index}`);
+        l.remove();
+
+        if (seeds == 0) {
+            seedHeader.innerText = '';
+        }
+
     } else if (seeds < 5) {
         console.log('Adding song seed ' + songData.items[index].id);
         inputButton.classList.toggle('selected');
         inputButton.innerText = '-';
         songSeed.push(songData.items[index].id);
         console.log(songSeed);
+
+        if (seeds == 0) {
+            seedHeader.innerText = 'Seeds:'
+        }
+
         seeds++;
-        // const l = document.createElement('li');
-        // l.id = `song-${index}`;
-        // l.classList.add('custom-item');
-        // l.innerHTML = `${songData.items[index].name}`;
-        // custom.appendChild(l);
+        const l = document.createElement('li');
+        l.id = `song-seed-${index}`
+        l.innerText = `${songData.items[index].name}`;
+        l.classList.add('seed-item');
+        seedList.appendChild(l);
     } else {
         alert('Maximum number of seeds selected (max = 5). Remove 1 to add another or submit.');
-        return;
     }
 }
 
@@ -170,6 +190,11 @@ function buildRecRequest() {
 
 // Scrolls the table to the top of the screen to display results
 function scrollToTable() {
+    songSeed = [];
+    artistSeed = [];
+    seeds = 0;
+    seedList.innerHTML = '';
+    seedHeader.innerText = '';
     window.scrollTo({
         top: table.offsetTop,
         behavior: 'smooth'
@@ -402,7 +427,8 @@ function artistList(data) {
     favArtistList.innerHTML = '';
     for (i = 0; i < data.items.length; i++) {
         const artist = document.createElement('li');
-        artist.innerHTML = `<img class='artist-img' src='${data.items[i].images[0].url}' alt=''><button id="artist-${i}" class="add artist" onclick="toggleAddArtist(${i})">+</button></img><h3 class='artist-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
+        artist.classList.add('display-item');
+        artist.innerHTML = `<button id="artist-${i}" class="add artist" onclick="toggleAddArtist(${i})">+</button><div class='item-grouping'><img class='artist-img' src='${data.items[i].images[0].url}' alt=''></img><h3 class='artist-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3></div>`;
         favArtistList.appendChild(artist);
     }
 }
@@ -425,7 +451,8 @@ function songList(data) {
     favSongList.innerHTML = '';
     for (i = 0; i < data.items.length; i++) {
         const song = document.createElement('li');
-        song.innerHTML = `<img class='song-img' src='${data.items[i].album.images[0].url}' alt=''><button id="song-${i}" class="add song" onclick="toggleAddSong(${i})">+</button></img><h3 class='song-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3>`;
+        song.classList.add('display-item');
+        song.innerHTML = `<button id="song-${i}" class="add song" onclick="toggleAddSong(${i})">+</button><div class='item-grouping'><img class='song-img' src='${data.items[i].album.images[0].url}' alt=''></img><h3 class='song-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3></div>`;
         favSongList.appendChild(song);
     }
 }
@@ -436,14 +463,16 @@ function recommendList(data) {
     recList.innerHTML = '';
     for (i = 0; i < data.tracks.length; i++) {
         const rec = document.createElement('li');
+        rec.classList.add('display-item');
         rec.innerHTML = `<img class='song-img' src='${data.tracks[i].album.images[0].url}' alt=''></img><h3 class='song-name'><a href='${data.tracks[i].external_urls.spotify}'>${data.tracks[i].name}</a></h3>`;
         recList.appendChild(rec);
     }
 
-    songSeed = [];
-    artistSeed = [];
-    seeds = 0;
-    custom.innerHTML = '';
+    // songSeed = [];
+    // artistSeed = [];
+    // seeds = 0;
+    // seedList.innerHTML = '';
+    // seedHeader.innerText = '';
 }
 
 // Using python recommendation algorithm

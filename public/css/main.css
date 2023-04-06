@@ -36,10 +36,10 @@ h1 {
     padding: 0.5em 0 0.5em !important;
 }
 table {
-    border-radius: 1em;
-    margin: 3em auto 0 !important;
+    border-radius: 1em !important;
+    margin: 3em 15% 3em auto !important;
     text-align: center !important;
-    width: 90% !important;
+    width: 85% !important;
     table-layout: auto !important;
 }
 td {
@@ -53,11 +53,7 @@ ol {
     padding: 0 !important;
     margin: 0 !important;
 }
-li {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    text-align: center !important;
+li.display-item {
     font-size: 1.25rem !important;
     width: 100% !important;
     height: 10em !important;
@@ -165,43 +161,61 @@ a:hover {
     font-size: 1.25rem !important;
 }
 img.artist-img, img.song-img {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    text-align: center !important;
     width: 5em !important;
     height: 5em !important;
 }
 h3 {
     text-align: center !important;
 }
-.add {
-    width: 5em !important;
-    height: 5em !important;
+button.add {
+    display: inline !important;
+    width: 40px !important;
+    height: 40px !important;
+    line-height: 35px !important;
     border-radius: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
 }
-
-.seed.display {
-    display: inline-block;
-    margin: 3em auto !important;
-
+div.item-grouping {
+    display: inline-block !important;
+    align-self: center !important;
+    text-align: center !important;
+    margin: auto 1em !important;
 }
 
-ol.inline.list {
+.seed.display {
+    text-align: center !important;
+    position: fixed !important;
+    right: 0 !important;
+    top: 25% !important;
+    height: 50% !important;
+    width: 15% !important;
+    margin: auto !important;
+    font-size: 1.25rem !important;
+    font-weight: normal !important;
+}
+li.seed-item {
+    text-align: center !important;
+    margin: 2em 0 !important;
+    font-size: inherit !important;
+    padding: 0 !important;
+}
+span {
+    text-decoration: underline !important;
+    margin: 2em 0 !important;
+    font-size: inherit !important;
+    font-weight: bold !important;
+}
+
+
+/* ol.inline.list {
     display: inline;
     list-style: none;
     font-family: inherit !important;
     font-size: 1.25rem !important;
 }
 
-.list.header {
-    display: inline !important;
-    font-family: inherit !important;
-    font-size: 1.25rem !important;
-}
 .custom-item {
     display: inline !important;
     padding: 0 1em 0 !important;
-}
+} */
