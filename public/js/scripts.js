@@ -36,101 +36,150 @@ const heads = ['Top Artists', 'Top Songs', 'Recommendations'];
 const number = document.getElementById('nosong');
 // Time range to fetch from: consistent across artists and songs
 const time = document.getElementById('timerange');
-
+// Seed list to add seeds to
 const seedList = document.getElementById('seed-list');
-
+// Header to be present when seeds are there
 const seedHeader = document.getElementById('seed-header');
 
-// Unused for now
+// Data returned from API calls
 let songData;
 let artistData;
 
+// Init seeds to be 0
 let seeds = 0;
 
 // Vars to store the seeds for the recommendation requests: needed because the info needs to be globally available
 // Could use callback functions, but we chose against it
-// let songSeed = "";
+// Genre is unused, but must be a part of the HTTP request for Spotify API
 let genreSeed = "";
-// let artistSeed = "";
 let songSeed = [];
 let artistSeed = [];
 
 // Used for creating the headers in the table; the headers should only be created once
 let submissions = 0;
 
+// Handles adding an artist as a seed
 function toggleAddArtist(index) {
+
+    // Get element this function attaches to
     const inputButton = document.getElementById(`artist-${index}`);
 
+    // Item is already in list
     if (inputButton.classList.contains('selected')) {
+
         console.log('Removing artist seed ' + artistData.items[index].id);
+
+        // Remove selected class for styling
         inputButton.classList.toggle('selected');
+        // Use + symbol instead of - symbol
         inputButton.innerText = '+';
+        // Remove seed from artistSeed list using filter function
         artistSeed = artistSeed.filter(a => a !== artistData.items[index].id);
-        console.log(artistSeed);
+        // Decrement seeds
         seeds--;
+        // Get list item element, remove it
         const l = document.getElementById(`artist-seed-${index}`);
         l.remove();
 
+        // If there are no seeds, remove the seed header
         if (seeds == 0) {
             seedHeader.innerText = '';
         }
 
+    // If there is room for another seed
     } else if (seeds < 5) {
-        console.log('Adding artist seed ' + artistData.items[index].id);
-        inputButton.classList.toggle('selected');
-        inputButton.innerText = '-';
-        artistSeed.push(artistData.items[index].id);
-        console.log(artistSeed);
 
+        console.log('Adding artist seed ' + artistData.items[index].id);
+
+        // Toggle selected class for styling
+        inputButton.classList.toggle('selected');
+        // Change button from + to -
+        inputButton.innerText = '-';
+        // Add item to artistSeed list
+        artistSeed.push(artistData.items[index].id);
+
+        // If this is the first seed being added, add the Seeds header
         if (seeds == 0) {
             seedHeader.innerText = 'Seeds:'
         }
-
+        // Increment seeds
         seeds++;
+        // Create list item
         const l = document.createElement('li');
+        // Give unique id so I can remove it later
         l.id = `artist-seed-${index}`
+        // Display the artist name
         l.innerText = `${artistData.items[index].name}`;
+        // Add class for styling
         l.classList.add('seed-item');
+        // Add item to seedList
         seedList.appendChild(l);
+    
+    // Item is able to be added, but there are too many seeds
     } else {
         alert('Maximum number of seeds selected (max = 5). Remove 1 to add another or submit.');
     }
 }
 
+// Handles adding an song as a seed
 function toggleAddSong(index) {
+
+    // Get element this function attaches to 
     const inputButton = document.getElementById(`song-${index}`);
 
+    // If the item is already added to seeds
     if (inputButton.classList.contains('selected')) {
+
         console.log('Removing song seed ' + songData.items[index].id);
+
+        // Remove the selected class for styling
         inputButton.classList.toggle('selected');
+        // Set text to show it can be added
         inputButton.innerText = '+';
+        // Remove item from the songSeed 
         songSeed = songSeed.filter(a => a !== songData.items[index].id);
-        console.log(songSeed);
+        // Decrement seed 
         seeds--;
+        // Get and remove seed item from list
         const l = document.getElementById(`song-seed-${index}`);
         l.remove();
 
+        // If last seed was removed, get rid of the seeds header
         if (seeds == 0) {
             seedHeader.innerText = '';
         }
 
+    // Seed can be added
     } else if (seeds < 5) {
-        console.log('Adding song seed ' + songData.items[index].id);
-        inputButton.classList.toggle('selected');
-        inputButton.innerText = '-';
-        songSeed.push(songData.items[index].id);
-        console.log(songSeed);
 
+        console.log('Adding song seed ' + songData.items[index].id);
+
+        // Add selected class for styling
+        inputButton.classList.toggle('selected');
+        // Change button text to reflect it can be removed now
+        inputButton.innerText = '-';
+        // Add song to songSeed list
+        songSeed.push(songData.items[index].id);
+
+        // If this is first item being added to list, add seeds header
         if (seeds == 0) {
             seedHeader.innerText = 'Seeds:'
         }
 
+        // Increment seeds
         seeds++;
+        // Create list item element
         const l = document.createElement('li');
+        // Give unique id to be used when removing it
         l.id = `song-seed-${index}`
+        // Set name of song
         l.innerText = `${songData.items[index].name}`;
+        // Add class for styling
         l.classList.add('seed-item');
+        // Add item to seedList
         seedList.appendChild(l);
+
+    // Item cannot be added
     } else {
         alert('Maximum number of seeds selected (max = 5). Remove 1 to add another or submit.');
     }
@@ -428,6 +477,7 @@ function artistList(data) {
     for (i = 0; i < data.items.length; i++) {
         const artist = document.createElement('li');
         artist.classList.add('display-item');
+        // Add button so item can be added as seed later. Pass index of the item to the onclick function, so it can track which item to refer to
         artist.innerHTML = `<button id="artist-${i}" class="add artist" onclick="toggleAddArtist(${i})">+</button><div class='item-grouping'><img class='artist-img' src='${data.items[i].images[0].url}' alt=''></img><h3 class='artist-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3></div>`;
         favArtistList.appendChild(artist);
     }
@@ -452,6 +502,7 @@ function songList(data) {
     for (i = 0; i < data.items.length; i++) {
         const song = document.createElement('li');
         song.classList.add('display-item');
+        // Add button so item can be added as seed later. Pass index of the item to the onclick function, so it can track which item to refer to
         song.innerHTML = `<button id="song-${i}" class="add song" onclick="toggleAddSong(${i})">+</button><div class='item-grouping'><img class='song-img' src='${data.items[i].album.images[0].url}' alt=''></img><h3 class='song-name'><a href='${data.items[i].external_urls.spotify}'>${data.items[i].name}</a></h3></div>`;
         favSongList.appendChild(song);
     }
@@ -467,48 +518,4 @@ function recommendList(data) {
         rec.innerHTML = `<img class='song-img' src='${data.tracks[i].album.images[0].url}' alt=''></img><h3 class='song-name'><a href='${data.tracks[i].external_urls.spotify}'>${data.tracks[i].name}</a></h3>`;
         recList.appendChild(rec);
     }
-
-    // songSeed = [];
-    // artistSeed = [];
-    // seeds = 0;
-    // seedList.innerHTML = '';
-    // seedHeader.innerText = '';
 }
-
-// Using python recommendation algorithm
-// function songDict(data) {
-//   trackListDict = "";
-//   trackDict = {};
-//   title = "";
-//   year = "";
-//   for (i = 0; i < data.items.length; i++) {
-//     title = data.items[i].name;
-//     year = data.items[i].album.release_date;
-//     year = Number(year.slice(0, 4));
-//     console.log(year);
-//     trackDict = {
-//       'name': title,
-//       'year': year,
-//     }
-//     const trackListDict = document.createElement("li");
-//     trackListDict.append(trackDict);
-//   }
-//   let recommendations = runPythonScript(trackDict);
-
-//   recommendList(recommendations);
-// }
-
-// async function sendTrackData(trackListDict) {
-//     console.log(JSON.stringify(trackListDict));
-//     const response = await fetch("http://localhost:8888/callback", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(trackListDict),
-//     });
-
-//     const recommendations = await response.json();
-
-//     recommendList(recommendations);
-// }

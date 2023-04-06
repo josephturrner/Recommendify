@@ -5,7 +5,7 @@
     --spotify-dark-green: #117a37;
     --border: rgb(200, 200, 200);
 }
-
+/* General text formatting */
 html {
     height: 100%;
 }
@@ -35,6 +35,8 @@ h1 {
     font-size: 2.75rem !important;
     padding: 0.5em 0 0.5em !important;
 }
+
+/* Center the table */
 table {
     border-radius: 1em !important;
     margin: 3em 15% 3em auto !important;
@@ -53,6 +55,7 @@ ol {
     padding: 0 !important;
     margin: 0 !important;
 }
+/* Fixed sizes for each item */
 li.display-item {
     font-size: 1.25rem !important;
     width: 100% !important;
@@ -120,6 +123,7 @@ select {
     outline: none !important;
 }
 
+/* Button styling */
 button {
     width: 40% !important;
     min-width: fit-content !important;
@@ -167,6 +171,7 @@ img.artist-img, img.song-img {
 h3 {
     text-align: center !important;
 }
+/* Seed display styling */
 button.add {
     display: inline !important;
     width: 40px !important;
@@ -182,7 +187,6 @@ div.item-grouping {
     text-align: center !important;
     margin: auto 1em !important;
 }
-
 .seed.display {
     text-align: center !important;
     position: fixed !important;
@@ -214,7 +218,6 @@ span {
     font-family: inherit !important;
     font-size: 1.25rem !important;
 }
-
 .custom-item {
     display: inline !important;
     padding: 0 1em 0 !important;
