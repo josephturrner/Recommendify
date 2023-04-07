@@ -18,12 +18,9 @@ Use a preexisting recommendation algorithm
     -	White
   -	Homepage
     -	Login
-    -	Input artists or songs to get recommendation
   -	Post sign in page
-    -	Select timeframe
-      - Displays top 5 songs, artists, albums, genres
-      - Displays listening stats
-      - Create playlist based upon results
-      - Create playlist of all new songs
-    -	Sign out
-    -	Merge playlists option
+    -	Select timeframe & X number of items
+      - Displays top X songs, artists
+      - Displays X recommendations
+    - Add seeds from returned data
+      - Generate X number of recommendations using selected seeds
